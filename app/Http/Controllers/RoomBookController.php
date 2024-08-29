@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 use App\Models\RoomBook;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class RoomBookController extends Controller
 {
-    public function book()
+    public function book($id)
     {
-        return view('frontend.room.book');
+        return view('frontend/room/book', [
+            'room' =>Room::findOrFail($id)
+        ]);
+      
     }
     public function bookview()
     {

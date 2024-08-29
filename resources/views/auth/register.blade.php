@@ -11,7 +11,15 @@
                 <h1>Registration Form</h1>
             </div>
         </div>
-
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         <form action="{{ url('register') }}" method="post">
             @csrf
             <div class="name">
@@ -53,6 +61,11 @@
             <p>password:</p>
             <div class="input-box">
                 <input type="password" name="password" placeholder="Password" required>
+                <i class="fa-solid fa-lock"></i> 
+            </div>
+            <p>confirm password:</p>
+            <div class="input-box">
+                <input type="password" name="password_confirmation" placeholder="password confirmation" required>
                 <i class="fa-solid fa-lock"></i> 
             </div>
             <div class="btn">

@@ -1,33 +1,60 @@
 @extends('layout.main')
-@section('title','Login')
-@section('content')
 
-<section class="login">
-    <div class="formcontainer">
-    <div class="wrapper">
-            <form action="login.php" method="post">
-                <div class="head">
-                    <div class="head_a">
-                        <img src="images/logohrr.png" alt="HRRS">
+@section('title', 'Login')
+
+@section('content')
+    <section class="login">
+        <div class="formcontainer">
+            <div class="wrapper">
+                <form method="POST" action="{{ url('login') }}">
+                    @csrf
+                    <div class="head">
+                        <div class="head_a">
+                            <img src="images/logohrr.png" alt="HRRS">
+                        </div>
+                        <div class="head_b">
+                            <h2>Login</h2>
+                        </div>
                     </div>
-                    <div class="head_b">
-                        <h2>Login </h2>
+
+                    <div class="input-box">
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Email"
+                            required autocomplete="email" autofocus
+                            class="form-control @error('email') is-invalid @enderror">
+                        <i class="fa-regular fa-envelope"></i>
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
-                </div>
-                <div class="input-box"> <input type="text" name="email" placeholder="Email" required>
-                    <i class="fa-regular fa-envelope"></i>
-                </div>
-                <div class="input-box"> <input type="password" name="password" placeholder="password" required> 
-                    <i class="fa-solid fa-lock"></i> </div>
-                <div class="remember-forgot">
-                    <lable> <input type="checkbox">&nbsp;Remember me</lable> <a href="#">Forgot password? </a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div class="register-link">
-                    <p>Don't have an account?<a href="{{ url('register') }}">&nbsp;Register</a></p>
-                </div>
-            </form>
+
+                    <div class="input-box">
+                        <input id="password" type="password" name="password" placeholder="Password" required
+                            autocomplete="current-password" class="form-control @error('password') is-invalid @enderror">
+                        <i class="fa-solid fa-lock"></i>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="remember-forgot">
+                        <label>
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            &nbsp;Remember me
+                        </label>
+                        <a href="{{ route('password.request') }}">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+
+                    <div class="register-link">
+                        <p>Don't have an account?<a href="{{ url('register') }}">&nbsp;Register</a></p>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
-    @endsection
+    </section>
+@endsection

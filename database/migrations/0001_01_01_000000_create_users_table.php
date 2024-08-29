@@ -15,14 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('f_name');
             $table->string('l_name');
-            $table->string('address');
-            $table->string('phone');
+            $table->text('address'); // Changed from string to text for potentially longer addresses
+            $table->string('phone', 20); // Changed to VARCHAR with a length limit of 20 characters
             $table->string('email')->unique();
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             // $table->rememberToken();
             $table->timestamps();
         });
+    
+    
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

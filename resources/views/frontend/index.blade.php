@@ -1,49 +1,50 @@
 @extends('layout.main')
 @section('title', 'Home')
 @section('content')
-    <section class="banner_main">
-        <div id="myCarousel" class="carousel slide banner" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
+<section class="banner_main">
+    <div id="myCarousel" class="carousel slide banner" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
 
-            <!-- Sticky Message -->
-            <div class="container text-center d-flex align-items-center justify-content-center"
-                style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; z-index: 2;">
-                <div style="background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px;">
-                    <h1 class="text-white" style="font-size: 3rem; font-weight: bold;">Welcome to Our Awesome Website</h1>
-                    <p class="text-white" style="font-size: 1.5rem; margin-top: 10px;">A Best Place to Stay</p>
-                    <a href="{{ url('/room') }}" class="btn btn-primary btn-lg mt-3"
-                        style="padding: 10px 30px; font-size: 1.5rem; border-radius: 50px; background-color: #007bff; border: none;">
-                        Book Now
-                    </a>
-                </div>
+        <!-- Sticky Message -->
+        <div class="container text-center d-flex align-items-center justify-content-center"
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;">
+            <div style="background-color: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px;">
+                <h1 class="text-white" style="font-size: 3rem; font-weight: bold;">Welcome to Our Awesome Website</h1>
+                <p class="text-white" style="font-size: 1.5rem; margin-top: 10px;">A Best Place to Stay</p>
+                <a href="{{ url('/room') }}" class="btn btn-primary btn-lg mt-3"
+                    style="padding: 10px 30px; font-size: 1.5rem; border-radius: 50px; background-color: #007bff; border: none;">
+                    Book Now
+                </a>
             </div>
-
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="first-slide" src="images/banner1.jpg" alt="First slide">
-                </div>
-                <div class="carousel-item">
-                    <img class="second-slide" src="images/banner2.jpg" alt="Second slide">
-                </div>
-                <div class="carousel-item">
-                    <img class="third-slide" src="images/banner3.jpg" alt="Third slide">
-                </div>
-            </div>
-
-            <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
-    </section>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="first-slide" src="images/banner1.jpg" alt="First slide">
+            </div>
+            <div class="carousel-item">
+                <img class="second-slide" src="images/banner2.jpg" alt="Second slide">
+            </div>
+            <div class="carousel-item">
+                <img class="third-slide" src="images/banner3.jpg" alt="Third slide">
+            </div>
+        </div>
+
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</section>
+
 
     <!-- end banner -->
     <!-- about -->
@@ -53,23 +54,27 @@
                 <div class="col-md-5">
                     <div class="titlepage">
                         <h2>About Us</h2>
-                        <p>Welcome to HRRS, where we believe that your stay should be as comfortable and seamless as
+                        <p id="about-text" class="text-collapsed">
+                            Welcome to HRRS, where we believe that your stay should be as comfortable and seamless as
                             possible. Our hotel room reservation system is designed to provide you with a hassle-free
                             booking experience, whether you're planning a quick getaway or an extended stay.
-
+    
                             At HRRS, we pride ourselves on offering a wide range of accommodations that cater to all types
                             of travelers. From cozy single rooms to luxurious suites, our hotel provides the perfect blend
                             of comfort, style, and convenience. Our reservation system is user-friendly, allowing you to
                             easily explore our room options, check availability, and book your stay with just a few clicks.
-
+    
                             Our mission is to ensure that your journey, from booking to check-out, is smooth and enjoyable.
                             We understand that every guest has unique needs, and we strive to meet those with personalized
                             service and attention to detail. Whether you're traveling for business, leisure, or a special
                             occasion, our dedicated team is here to make your stay memorable.
-
+    
                             Thank you for choosing HRRS. We look forward to welcoming you and making your stay with us a
-                            delightful experience.</p>
-                        <a class="read_more" href="Javascript:void(0)"> Read More</a>
+                            delightful experience.
+                        </p>
+                        <a id="read-more" href="javascript:void(0)" onclick="toggleText()" class="btn btn-primary">
+                            Read More
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-7">
@@ -80,6 +85,41 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        function toggleText() {
+            var textElement = document.getElementById('about-text');
+            var linkElement = document.getElementById('read-more');
+    
+            if (textElement.classList.contains('text-collapsed')) {
+                textElement.classList.remove('text-collapsed');
+                linkElement.textContent = 'Read Less';
+            } else {
+                textElement.classList.add('text-collapsed');
+                linkElement.textContent = 'Read More';
+            }
+        }
+    </script>
+    
+    <style>
+        .text-collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 10; /* Number of lines to show */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    
+        /* Optional: Adjust button styling */
+        #read-more {
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+    
+        #read-more:hover {
+            background-color: #0056b3; /* Darker shade of primary color */
+        }
+    </style>
+    
     <!-- end about -->
     <!-- our_room -->
     <div class="our_room">

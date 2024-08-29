@@ -39,7 +39,7 @@
                         delightful experience.</p>
                      <a class="read_more" href="Javascript:void(0)"> Read More</a>
                   </div>
-               </div>
+               </div>  
                <div class="col-md-7">
                   <div class="about_img">
                      <figure><img src="images/about.png" alt="#"/></figure>

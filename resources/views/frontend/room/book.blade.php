@@ -1,5 +1,6 @@
 @extends('layout.main')
 @section('title', 'Booking')
+
 @section('content')
 
     <div class="container-fluid p-0" style="min-height: 100vh; display: flex; align-items: stretch;">
@@ -12,8 +13,8 @@
                     style="background-color: rgba(255, 255, 255, 0.9); width: 100%; max-width: 600px;">
                     <h2 class="text-center text-dark mb-4">Hotel Room Booking Form</h2>
                     @if (session()->has('success'))
-                            <div class="alert bg-success">{{ session()->get('success') }}</div>
-                        @endif
+                        <div class="alert bg-success">{{ session()->get('success') }}</div>
+                    @endif
 
                     <form action="{{ url('book') }}" method="post">
                         @csrf
@@ -78,7 +79,7 @@
                             <button type="reset" class="btn btn-danger btn-lg mx-2">Reset</button>
                             <button type="submit" class="btn btn-primary btn-lg mx-2">Book Now</button>
                         </div>
-                        
+
                     </form>
                 </div>
             </div>

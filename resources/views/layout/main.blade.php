@@ -29,10 +29,10 @@
     <!-- header -->
     <header>
         <!-- header inner -->
-        <div class="header">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+        <div class="header" style="width: 100%;">
+            <div class="container-fluid" style="padding: 0;">
+                <div class="row no-gutters" style="width: 100%;">
+                    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col logo_section">
                         <div class="full">
                             <div class="center-desk">
                                 <div class="logo">
@@ -41,8 +41,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
-                        <nav class="navigation navbar navbar-expand-md navbar-dark ">
+                    <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+                        <nav class="navigation navbar navbar-expand-md navbar-dark">
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
                                 data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
                                 aria-label="Toggle navigation">
@@ -51,29 +51,67 @@
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
                                     <li class="nav-item active">
-                                        <a class="nav-link {{ Request::is('home') ? 'active text-danger border-bottom border-danger border-bottom-1' : ''}}" href="{{ url('home') }}">
+                                        <a class="nav-link {{ Request::is('home') ? 'active text-danger border-bottom border-danger border-bottom-1' : '' }}"
+                                            href="{{ url('home') }}">
                                             <i class="fas fa-home" style="margin-right: 8px;"></i>Home</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ Request::is('about') ? 'active text-danger border-bottom border-danger border-bottom-1' : ''}}" href="{{ url('about') }}">
-                                            <i class="fa-duotone fa-solid fa-book-open-reader" style="margin-right: 8px;"></i>About</a>
+                                        <a class="nav-link {{ Request::is('about') ? 'active text-danger border-bottom border-danger border-bottom-1' : '' }}"
+                                            href="{{ url('about') }}">
+                                            <i class="fa-duotone fa-solid fa-book-open-reader"
+                                                style="margin-right: 8px;"></i>About</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ Request::is('room') ? 'active text-danger border-bottom border-danger border-bottom-1' : ''}}" href="{{ url('room') }}">
+                                        <a class="nav-link {{ Request::is('room') ? 'active text-danger border-bottom border-danger border-bottom-1' : '' }}"
+                                            href="{{ url('room') }}">
                                             <i class="fas fa-bed" style="margin-right: 8px;"></i>Our Rooms</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ Request::is('gallery') ? 'active text-danger border-bottom border-danger border-bottom-1' : ''}}" href="{{ url('gallery') }}">
+                                        <a class="nav-link {{ Request::is('gallery') ? 'active text-danger border-bottom border-danger border-bottom-1' : '' }}"
+                                            href="{{ url('gallery') }}">
                                             <i class="fa-solid fa-image" style="margin-right: 8px;"></i>Gallery</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ Request::is('contact') ? 'active text-danger border-bottom border-danger border-bottom-1' : ''}}" href="{{ url('contact') }}">
+                                        <a class="nav-link {{ Request::is('contact') ? 'active text-danger border-bottom border-danger border-bottom-1' : '' }}"
+                                            href="{{ url('contact') }}">
                                             <i class="fa-solid fa-address-book" style="margin-right: 8px;"></i>Contact Us</a>
                                     </li>
-                            
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ url('login') }}"><i class="fa-solid fa-user" style="margin-right: 8px;"></i>Login</a>
-                                    </li>
+                                </ul>
+                                <ul class="navbar-nav ms-auto">
+                                    @if (auth()->check())
+                                        <li class="nav-item dropdown ">
+                                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
+                                                role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                                                {{ Auth::user()->f_name }}
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
+                                                <!-- Dashboard Link -->
+                                                <a class="dropdown-item" href="{{ url('user/dashboard') }}">
+                                                    <i class="fa-solid fa-home" style="margin-right: 8px;"></i>
+                                                    {{ __('Dashboard') }}
+                                                </a>
+                                                <!-- Logout Link -->
+                                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    <i class="fa-solid fa-sign-out-alt" style="margin-right: 8px;"></i>
+                                                    {{ __('Logout') }}
+                                                </a>
+                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                    class="d-none">
+                                                    @csrf
+                                                </form>
+                                            </div>
+                                        </li>
+                                    @else
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('login') }}">
+                                                <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                                                {{ __('Login') }}
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </nav>
@@ -82,6 +120,7 @@
             </div>
         </div>
     </header>
+    
 
     @yield('content')
 
@@ -94,17 +133,23 @@
                         <ul class="conta">
                             <li><i class="fa fa-map-marker" aria-hidden="true"></i> Address</li>
                             <li><i class="fa fa-mobile" aria-hidden="true"></i> +977-9840074989</li>
-                            <li> <i class="fa fa-envelope" aria-hidden="true"></i><a href="#">hrrs024@gmail.com</a></li>
+                            <li> <i class="fa fa-envelope" aria-hidden="true"></i><a
+                                    href="#">hrrs024@gmail.com</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
                         <h3>Menu Link</h3>
                         <ul class="link_menu">
-                            <li class=" {{ Request::is('home') ? 'active text-danger ' : ''}}"><a href="{{ url('home') }}">Home</a></li>
-                            <li class=" {{ Request::is('about') ? 'active text-danger' : ''}}"><a href="{{ url('about') }}"> about</a></li>
-                            <li class=" {{ Request::is('room') ? 'active text-danger' : ''}}"><a href="{{ url('room') }}">Our Room</a></li>
-                            <li class=" {{ Request::is('gallery') ? 'active text-danger' : ''}}"><a href="{{ url('gallery') }}">Gallery</a></li>
-                            <li class=" {{ Request::is('contact') ? 'active text-danger' : ''}}"><a href="{{ url('contact') }}">Contact Us</a></li>
+                            <li class=" {{ Request::is('home') ? 'active text-danger ' : '' }}"><a
+                                    href="{{ url('home') }}">Home</a></li>
+                            <li class=" {{ Request::is('about') ? 'active text-danger' : '' }}"><a
+                                    href="{{ url('about') }}"> about</a></li>
+                            <li class=" {{ Request::is('room') ? 'active text-danger' : '' }}"><a
+                                    href="{{ url('room') }}">Our Room</a></li>
+                            <li class=" {{ Request::is('gallery') ? 'active text-danger' : '' }}"><a
+                                    href="{{ url('gallery') }}">Gallery</a></li>
+                            <li class=" {{ Request::is('contact') ? 'active text-danger' : '' }}"><a
+                                    href="{{ url('contact') }}">Contact Us</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">

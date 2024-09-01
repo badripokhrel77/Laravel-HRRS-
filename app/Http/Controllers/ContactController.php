@@ -12,7 +12,7 @@ class ContactController extends Controller
 {
     function contact()
     {
-        return view('contact');
+        return view('/contact');
     }
 
     public function send(Request $request)
@@ -21,6 +21,7 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
             'message' => 'required|string',
         ]);
 
@@ -28,7 +29,7 @@ class ContactController extends Controller
         $contactData = $request->only('name', 'email','phone', 'message');
 
         // Send email
-        Mail::to('badripokhrel.77@gmail.com')->send(new ContactMail($contactData));
+        Mail::to('badripokhrel7@gmail.com')->send(new ContactMail($contactData));
 
         // Redirect back with success message
         return redirect()->back()->with('success', 'Your message has been sent successfully!');

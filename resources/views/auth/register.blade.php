@@ -25,14 +25,14 @@
             <div class="name">
                 <div class="first">
                     <p>First Name:</p>
-                    <div class="input-box"> <input type="text" name="f_name" placeholder="First Name" required>
+                    <div class="input-box"> <input type="text" name="f_name" value="{{ old('f_name') }}" placeholder="First Name" >
                         <i class="fa-solid fa-pen"></i>
                     </div>
                 </div>
                 <div class="first">
                     <p>Last Name:</p>
                     <div class="input-box">
-                        <input type="text" name="l_name" placeholder="Last Name" required>
+                        <input type="text" name="l_name" value="{{ old('l_name') }}" placeholder="Last Name" >
                         <i class="fa-solid fa-pen"></i>
                     </div>
                 </div>
@@ -41,22 +41,28 @@
                 <div class="first">
                     <p>Address:</p>
                     <div class="input-box">
-                        <input type="text" name="address" placeholder="Address" required> 
+                        <input type="text" name="address" value="{{ old('address') }}" placeholder="Address" > 
                         <i class="fa-solid fa-address-book"></i>
                     </div>
                 </div>
                 <div class="first">
                     <p>phone Number:</p>
                     <div class="input-box">
-                        <input type="number" name="phone" placeholder="Phone Number" required>
+                        <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="Phone Number" >
                          <i class="fa-solid fa-phone"></i>
                     </div>
                 </div>
             </div>
             <p>Email:</p>
             <div class="input-box">
-                </class><input type="email" name="email" placeholder="Email" required> 
+                </class><input type="text" name="email" value="{{ old('email') }}" placeholder="Email" 
+                class="form-control @error('email') is-invalid @enderror"> 
                 <i class="fa-regular fa-envelope"></i>
+                @error('email')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
             </div>
             <p>password:</p>
             <div class="input-box">

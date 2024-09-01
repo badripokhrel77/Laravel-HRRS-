@@ -14,11 +14,16 @@ class AuthCheckMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    
+    public function handle($request, Closure $next)
     {
-        if(Auth::check() && Auth::user()){
-            return $next($request);
+        // Check if the authenticated user is an admin
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            return $next($request); // Allow access
         }
-       return redirect(url('/login'));
+
+        // If not admin, redirect to home or a different route
+        return redirect('/login')->with('error', 'You do not have admin access.');
     }
+
 }

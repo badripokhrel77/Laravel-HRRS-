@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('f_name');
             $table->string('l_name');
-            $table->text('address'); // Changed from string to text for potentially longer addresses
-            $table->string('phone', 20); // Changed to VARCHAR with a length limit of 20 characters
+            $table->string('address'); // Changed from string to text for potentially longer addresses
+            $table->string('phone', 15); // Changed to VARCHAR with a length limit of 20 characters
             $table->string('email')->unique();
+            $table->enum('role',['customer','admin'])->default('customer');
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             // $table->rememberToken();

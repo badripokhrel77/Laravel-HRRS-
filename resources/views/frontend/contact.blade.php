@@ -36,17 +36,17 @@
                         @endif
                         <div class="row">
                             <div class="col-md-12 ">
-                                <input class="contactus" placeholder="Name" type="type" name="name" required>
+                                <input class="contactus" placeholder="Name" type="text" name="name" required>
                             </div>
                             <div class="col-md-12">
-                                <input class="contactus" placeholder="Email" type="type" name="email" required>
+                                <input class="contactus" placeholder="Email" type="email" name="email" required>
                             </div>
                             <div class="col-md-12">
-                                <input class="contactus" placeholder="Phone Number" type="type" name="Phone Number"
+                                <input class="contactus" placeholder="Phone Number" type="tel" name="phone"
                                     required>
                             </div>
                             <div class="col-md-12">
-                                <textarea class="textarea" placeholder="Message" type="type" name='message' required></textarea>
+                                <textarea class="textarea" placeholder="Message" type="text" name='message' required></textarea>
                             </div>
                             <div class="col-md-12">
                                 <button class="send_btn">Send</button>

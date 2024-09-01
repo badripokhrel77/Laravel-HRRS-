@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
@@ -42,6 +43,7 @@ Route::post('/book',[RoomBookController::class,'store']);
 // contact
 // Route::get('/contact', [ContactController::class, 'index']);
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
 
 // auth
 // Route::get('/login',[LoginController::class, 'index']);

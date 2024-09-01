@@ -54,4 +54,21 @@ class LoginController extends Controller
     ]);
 }
 
+protected function sendFailedLoginResponse(Request $request)
+{
+    return redirect()->back()
+        ->withInput($request->only('email', 'remember'))
+        ->withErrors([
+            'login_failed' => 'Either Email Or password is Incorrect !!.',
+        ]);
+}
+protected function redirectTo()
+{
+    if (Auth::user()->role === 'admin') {
+        return '/admin/dashboard';
+    } else {
+        return '/home';
+    }
+}
+
 }

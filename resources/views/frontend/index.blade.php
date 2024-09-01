@@ -228,22 +228,38 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <form id="request" class="main_form">
+                    <form action="{{ route('contact.send') }}" method="POST" id="request" class="main_form">
+                        @csrf
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-12 ">
-                                <input class="contactus" placeholder="Name" type="type" name="Name">
+                                <input class="contactus" placeholder="Name" type="text" name="name" required>
                             </div>
                             <div class="col-md-12">
-                                <input class="contactus" placeholder="Email" type="type" name="Email">
+                                <input class="contactus" placeholder="Email" type="email" name="email" required>
                             </div>
                             <div class="col-md-12">
-                                <input class="contactus" placeholder="Phone Number" type="type" name="Phone Number">
+                                <input class="contactus" placeholder="Phone Number" type="tel" name="phone"
+                                    required>
                             </div>
                             <div class="col-md-12">
-                                <textarea class="textarea" placeholder="Message" type="type" Message="Name"></textarea>
+                                <textarea class="textarea" placeholder="Message" type="text" name='message' required></textarea>
                             </div>
                             <div class="col-md-12">
-                                <button class="send_btn">Send</button>
+                                <button class="send_btn" href="{{ url('/contact') }}" >Send</button>
                             </div>
                         </div>
                     </form>

@@ -16,9 +16,21 @@
                             <h2>Login</h2>
                         </div>
                     </div>
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <!-- Display general login error -->
+                    @if ($errors->has('login_failed'))
+                        <div class="alert alert-danger">
+                            <strong>{{ $errors->first('login_failed') }}</strong>
+                        </div>
+                    @endif
 
                     <div class="input-box">
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Email"
+                        <input id="email" type="text" name="email" value="{{ old('email') }}" placeholder="Email"
                             required autocomplete="email" autofocus
                             class="form-control @error('email') is-invalid @enderror">
                         <i class="fa-regular fa-envelope"></i>
@@ -30,7 +42,7 @@
                     </div>
 
                     <div class="input-box">
-                        <input id="password" type="password" name="password" placeholder="Password" required
+                        <input id="password" type="password" name="password" placeholder="Password"
                             autocomplete="current-password" class="form-control @error('password') is-invalid @enderror">
                         <i class="fa-solid fa-lock"></i>
                         @error('password')

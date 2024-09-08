@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -68,5 +69,31 @@ class profileController extends Controller
     return back()->with('success', 'Password changed successfully!');
 }
 
-    
+public function updateImage(Request $request)
+{
+    // Validate the uploaded file
+    $request->validate([
+        'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    $user = Auth::user();
+
+    // Check if a file was uploaded
+    if ($request->hasFile('image')) {
+        // Delete the old image if it exists
+        if ($user->image && Storage::exists('public/' . $user->image)) {
+            Storage::delete('public/' . $user->image);
+        }
+
+        // Store the new image
+        $imagePath = $request->file('image')->store('profile_images', 'public');
+        $user->image = $imagePath;
+        $user->save();
+
+        return back()->with('success', 'Profile picture updated successfully!');
+    }
+
+    return back()->with('error', 'No image file was uploaded.');
+}
+
 }

@@ -59,7 +59,11 @@ Route::prefix('user')->middleware(['is_auth'])->group(function(){
     Route::resource('reservedroom', App\Http\Controllers\User\ReservedRoomController::class);
 
     Route::post('/profile/change-password', [App\Http\Controllers\User\ProfileController::class, 'changePassword'])->name('password.change');
+
+    // Route for updating profile image
+    Route::put('/profile/update-image', [App\Http\Controllers\User\ProfileController::class, 'updateImage'])->name('profile.updateImage');
 });
+
 
 
 Auth::routes();

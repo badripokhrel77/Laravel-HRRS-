@@ -145,6 +145,16 @@
                     </li>
                 </ol>
             </nav>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -172,17 +182,20 @@
             <hr class="mt-0 mb-4">
             <div id="profileSection">
                 <div class="row gutters-sm">
-                    <div class="card mb-2 mb-xl-0" style="height: 240px;">
+                    <div class="card mb-2 mb-xl-0" style="height: 260px;">
                         <div class="card-header">Profile Picture</div>
                         <div class="card-body text-center">
                             <!-- Profile picture image-->
                             <img class="img-account-profile rounded-circle"
-                                src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/profile.jpg') }}"
+                                alt="Profile Picture" style="width: 150px; height: 150px;">
                             <!-- Profile picture help block-->
                             <div class="medium font-italic text-black mb-4">
-                                {{ Auth::user()->f_name . ' ' . Auth::user()->l_name }}</div>
+                                {{ Auth::user()->f_name . ' ' . Auth::user()->l_name }}
+                            </div>
                         </div>
                     </div>
+
                     <div class="col-md-9">
                         <div class="card mb-3">
                             <div class="card-header">User Details</div>
@@ -243,14 +256,28 @@
                                 <div class="card-body text-center">
                                     <!-- Profile picture image-->
                                     <img class="img-account-profile rounded-circle mb-2"
-                                        src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/profile.jpg') }}"
+                                        alt="Profile Picture" style="width: 150px; height: 150px;">
                                     <!-- Profile picture help block-->
-                                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                    <!-- Profile picture upload button-->
-                                    <button class="btn btn-primary" type="button">Upload new image</button>
+                                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 2 MB</div>
+                                    <!-- Profile picture upload form-->
+                                    <form action="{{ route('profile.updateImage') }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group">
+                                            <label for="fileInput" class="btn btn-primary">choose image</label>
+                                            <input type="file" id="fileInput" name="image" class="d-none" accept="image/*">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">upload</button>
+                                    </form>
+                                    
+
                                 </div>
                             </div>
                         </div>
+
+
+
                         <div class="col-xl-8">
                             <!-- Account details card-->
                             <div class="card mb-4">
@@ -307,18 +334,21 @@
                     </div>
                     <div class="card-body">
                         <!-- Update the form action to point to the route for password change -->
-                        <form class="form" role="form" method="POST" action="{{ route('password.change') }}" autocomplete="off">
+                        <form class="form" role="form" method="POST" action="{{ route('password.change') }}"
+                            autocomplete="off">
                             @csrf
                             <div class="form-group">
                                 <label for="inputPasswordOld">Current Password</label>
-                                <input type="password" class="form-control" id="inputPasswordOld" name="current_password" required="">
+                                <input type="password" class="form-control" id="inputPasswordOld"
+                                    name="current_password" required="">
                                 @error('current_password')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="inputPasswordNew">New Password</label>
-                                <input type="password" class="form-control" id="inputPasswordNew" name="new_password" required="">
+                                <input type="password" class="form-control" id="inputPasswordNew" name="new_password"
+                                    required="">
                                 <span class="form-text small text-muted">
                                     The password must be 8-20 characters, and must <em>not</em> contain spaces.
                                 </span>
@@ -328,7 +358,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputPasswordNewVerify">Verify</label>
-                                <input type="password" class="form-control" id="inputPasswordNewVerify" name="new_password_confirmation" required="">
+                                <input type="password" class="form-control" id="inputPasswordNewVerify"
+                                    name="new_password_confirmation" required="">
                                 <span class="form-text small text-muted">
                                     To confirm, type the new password again.
                                 </span>
@@ -340,7 +371,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
     <script>

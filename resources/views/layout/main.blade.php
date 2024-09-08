@@ -4,19 +4,20 @@
 <head>
     <title>@yield('title', 'Hotel Room Reservation')</title>
     <!-- bootstrap css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- style css -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <!-- Responsive-->
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     <!-- fevicon -->
-    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+    <link rel="icon" href="{{ asset('images/fevicon.png') }}" type="image/gif" />
     <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
     <!-- Tweaks for older IEs-->
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+    <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.mCustomScrollbar.min.css') }}"
         media="screen">
+ <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 
 </head>
 
@@ -36,7 +37,7 @@
                         <div class="full">
                             <div class="center-desk">
                                 <div class="logo">
-                                    <a href=" {{ url('home') }}"><img src="images/logohrr.png" alt="HRRS" /> </a>
+                                    <a href=" {{ url('home') }}"><img src="{{ asset('images/logohrr.png') }}" alt="HRRS" /> </a>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +90,8 @@
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
                                                 <!-- Dashboard Link -->
                                                 <a class="dropdown-item" href="{{ url('user/dashboard') }}">
-                                                    <i class="fa-solid fa-home" style="margin-right: 8px;"></i>
-                                                    {{ __('Dashboard') }}
+                                                    <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                                                    {{ __('Profile') }}
                                                 </a>
                                                 <!-- Logout Link -->
                                                 <a class="dropdown-item" href="{{ route('logout') }}"
@@ -183,14 +184,15 @@
     </footer>
     <!-- end footer -->
     <!-- Javascript files-->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.0.0.min.js') }}"></script>
     <!-- sidebar -->
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    @yield('script')
 </body>
 
 </html>

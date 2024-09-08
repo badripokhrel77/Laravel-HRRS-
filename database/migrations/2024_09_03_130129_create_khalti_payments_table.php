@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roombook', function (Blueprint $table) {
+        Schema::create('khalti_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('name');
-            $table->string('phone');
-            $table->string('checkin');
-            $table->string('checkout');
-            $table->string('guestn');
-            $table->string('message');
             $table->timestamps();
         });
     }
@@ -29,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roombook');
+        Schema::dropIfExists('khalti_payments');
     }
 };

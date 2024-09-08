@@ -24,12 +24,6 @@
                 User Dashboard
             </div>
 
-            <a href="{{ url('user/dashboard') }}"
-                style="color: rgb(15, 15, 15); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"
-                class="{{ request()->is('user/dashboard') ? 'active-link' : '' }}">
-                <i class="fas fa-home" style="margin-right: 8px;"></i> Dashboard
-            </a>
-
             <a href="{{ url('user/profile') }}"
                 style="color: rgb(15, 15, 15); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"
                 class="{{ request()->is('user/profile') ? 'active-link' : '' }}">

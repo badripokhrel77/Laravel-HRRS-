@@ -20,7 +20,7 @@
         font-weight: bold;
     }
 
-    .room-form .form-control {
+    .room-form input.form-control {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -28,7 +28,7 @@
     }
 
     .room-form .form-control[type="file"] {
-        padding: 5px;
+        padding: 0px;
     }
 
     .room-form .btn-submit {

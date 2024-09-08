@@ -1,16 +1,60 @@
 @extends('layout.main')
 @section('title', 'Booking')
 
+<style>
+    .radio-button-group {
+        display: flex;
+    }
+
+    .radio-button-group .item {
+        flex: 1;
+        position: relative;
+
+    }
+
+    .radio-button-group .radio-button {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+
+    }
+
+    .radio-button-group .radio-button+label {
+        padding: 16px 10px;
+        cursor: pointer;
+        border: 1px solid #CCC;
+        margin-right: -2px;
+        color: #555;
+        background-color: #ffffff;
+        text-align: center;
+        display: block;
+    }
+
+    .radio-button-group .item:first-of-type .radio-button+label {
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+
+    .radio-button-group .item:last-of-type .radio-button+label {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .radio-button-group .radio-button:checked+label {
+        background-color: #1ba0ff;
+        color: #FFF;
+    }
+</style>
 @section('content')
 
     <div class="container-fluid p-0" style="min-height: 100vh; display: flex; align-items: stretch;">
         <div class="row no-gutters w-100">
             <!-- Form Column -->
-
             <div class="col-md-6 d-flex justify-content-center align-items-center"
-                style="background: linear-gradient(to right, blue, white);">
+                style="background: linear-gradient(to right, rgb(213, 213, 242), white);">
                 <div class="p-4 rounded shadow-lg"
-                    style="background-color: rgba(255, 255, 255, 0.9); width: 100%; max-width: 600px;">
+                    style="background-color: rgba(226, 248, 238, 0.9); width: 100%; max-width: 600px;">
                     <h2 class="text-center text-dark mb-4">Hotel Room Booking Form</h2>
                     @if (session()->has('success'))
                         <div class="alert bg-success">{{ session()->get('success') }}</div>
@@ -21,14 +65,14 @@
 
                         <div class="form-group">
                             <label for="fullName" class="text-dark">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="name"
-                                placeholder="Full Name">
+                            <input type="text" class="form-control" id="fullName" name="user_id"
+                                value="{{ $user->f_name }} {{ $user->l_name }}" placeholder="Full Name">
                         </div>
 
                         <div class="form-group">
                             <label for="phone" class="text-dark">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="phone"
-                                placeholder="Phone Number">
+                            <input type="tel" class="form-control" id="phone" name="user_id"
+                                value="{{ $user->phone }}" placeholder="Phone Number">
                         </div>
 
                         <div class="form-row">
@@ -43,28 +87,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="roomType" class="text-dark">Room Type</label>
-                            <select id="roomType" name="roomtype" class="form-control">
-                                <option selected>Choose...</option>
-                                <option>Single Room</option>
-                                <option>Double Room</option>
-                                <option>Deluxe Room</option>
-                                <option>Family Room</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="roomNumber" class="text-dark">Room Number</label>
-                            <select id="roomNumber" name="roomno" class="form-control">
-                                <option selected>Available Room...</option>
-                                <option>101</option>
-                                <option>102</option>
-                                <option>103</option>
-                                <option>104</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
                             <label for="guests" class="text-dark">Number of Guests</label>
                             <input type="number" class="form-control" id="guests" name="guestn" min="1"
                                 max="10">
@@ -75,31 +97,146 @@
                             <textarea class="form-control" id="specialRequests" name="message" rows="3" placeholder="Any special requests?"></textarea>
                         </div>
 
-                        <div class="text-center">
-                            <button type="reset" class="btn btn-danger btn-lg mx-2">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg mx-2">Book Now</button>
+                        <div class="radio-button-group mts">
+                            <div class="item">
+                                <input type="radio" name="payment_type" class="radio-button" value="cash" id="button1"
+                                    checked />
+                                <label for="button1">Cash </label>
+                            </div>
+                            <div class="item">
+                                <input type="radio" name="payment_type" class="radio-button" value="online"
+                                    id="button2" />
+                                <label for="button2">Online Payment</label>
+                            </div>
                         </div>
 
+                        <div class="text-center mt-4">
+                            <button type="reset" class="btn btn-danger btn-lg mx-2">Reset</button>
+                            <button type="submit" class="cash-section btn btn-primary btn-lg mx-2">Submit</button>
+                            <button type="submit" id="payment-button"
+                                style="display: none; background-color: #5D2E8E; color: #ffffff; font-size: 16px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;"
+                                class="online-section btn btn-primary btn-lg mx-2">Pay with Khalti</button>
+                        </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Images Column -->
-            <div class="col-md-6 d-flex flex-column">
-                <div class="d-flex flex-column justify-content-between" style="height: 100%;">
-                    <div class="border-box p-2"
-                        style="border: 2px solid #d1bcbc; border-radius: 8px; overflow: hidden; flex: 1;">
-                        <img src="images/banner1.jpg" alt="Photo 1" class="img-fluid"
-                            style="width: 100%; height: 100%; object-fit: cover;">
+            <!-- Room Details Column -->
+            <div class="col-md-6">
+                <section style="background-color: #eee;">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div>
+                                        <img src="{{ asset($room->image) }}" alt="room"
+                                            style="width: 300px; height:180px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0" style="color: rgb(19, 24, 66);">Type</p>
+                                            </div>
+
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">{{ $room->category->title }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0" style="color: rgb(19, 24, 66);">Room</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">{{ $room->name }}</p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0" style="color: rgb(19, 24, 66);">Price</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">Rs.{{ $room->price }}/night</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container py-2 h-100">
+                                <div class="row d-flex align-items-center h-100">
+                                    <div class="col-12 col-xl-12"> <!-- Adjusted the column to take full width -->
+                                        <div class="card mb-5" style="border-radius: 15px;">
+                                            <div class="card-body p-4"> <!-- Reduced padding for more width -->
+                                                <h3 class="mb-1" style="color: rgb(19, 24, 66); font-size: 1.6em;">
+                                                    Description</h3>
+                                                <p class="small mb-0" style="font-size: 1.2em; color: black;">
+                                                    {{ $room->description }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
-                    <div class="border-box p-2 mt-2"
-                        style="border: 2px solid #000; border-radius: 8px; overflow: hidden; flex: 1;">
-                        <img src="images/banner2.jpg" alt="Photo 2" class="img-fluid"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                </div>
+                </section>
             </div>
         </div>
     </div>
+@endsection
 
+@section('script')
+    <script>
+        $('.radio-button').click(function() {
+            if ($(this).val() == 'online') {
+                $('.cash-section').hide();
+                $('.online-section').show();
+            } else {
+                $('.cash-section').show();
+                $('.online-section').hide();
+            }
+        });
+    </script>
+    <script>
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "17663fc24f63497286827bd8be85ef36",
+            "productIdentity": "1234567890",
+            "productName": "room",
+            "productUrl": "http://127.0.0.1:8000/book/6",
+            "paymentPreference": [
+                "KHALTI",
+                "EBANKING",
+                "MOBILE_BANKING",
+                "CONNECT_IPS",
+                "SCT",
+                ],
+            "eventHandler": {
+                onSuccess (payload) {
+                    // hit merchant api for initiating verfication
+                    console.log(payload);
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: 1000});
+        }
+    </script>
 @endsection

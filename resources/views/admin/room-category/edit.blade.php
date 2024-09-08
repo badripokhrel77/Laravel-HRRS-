@@ -1,7 +1,6 @@
 
 @extends('layout.admin')
-@section('content')
-<style>
+@section('content')<style>
     .room-form-container {
         max-width: 600px;
         margin: 0 auto;
@@ -21,7 +20,7 @@
         font-weight: bold;
     }
 
-    .room-form input.form-control {
+    .room-form .form-control {
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -48,44 +47,33 @@
     }
 </style>
 <div style="text-align: center; margin-bottom: 20px;">
-    <h1 style="color: darkblue;">Room Add Section</h1>
+    <h1 style="color: darkblue;">Room Category Update Section</h1>
 </div>
 
+
 <div class="room-form-container">
+    <h1>Edit Room Category</h1>
     @if(session()->has("success"))
     <div class="alert bg-success">{{ session()->get('success') }}</div>
     @endif
-<form action="{{ route('rooms.store') }}" method="POST" class="room-form"
+<form action="{{ route('roomcategory.update', $category->id) }}" method="POST" class="room-form"
     enctype="multipart/form-data">
-    @csrf
+    @csrf {{  method_field("put") }}
+    <div class="form-group">
+        <label for="name">Title</label>
+        <input type="text" id="name" name="title" value="{{ $category->title }}" class="form-control" required>
+    </div>
     <div class="form-group">
         <label for="image">Room Image</label>
-        <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
-    </div>
-    <div class="form-group">
-        <label for="name">Room Category</label>
-        <select id="roomType" name="category_id" class="form-control ">
-            <option selected>Choose...</option>
-            @foreach ($categories as $category )
-                
-            <option value="{{ $category->id }}">{{ $category->title}}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="name">Room Name</label>
-        <input type="text" id="name" name="name" class="form-control" required>
+        <input type="file" id="image" name="image" class="form-control" accept="image/*" >
+        <img src="{{  asset($category->image)  }}" style="height: 50px" alt="">
     </div>
     <div class="form-group">
         <label for="description">Room Description</label>
-        <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+        <textarea id="description" name="description" class="form-control" rows="4">{{ $category->description  }}</textarea>
     </div>
     <div class="form-group">
-        <label for="price">Room Price</label>
-        <input type="text" id="price" name="price" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn-submit">Add Room</button>
+        <button type="submit" class="btn-submit">Update Room Category</button>
     </div>
 </form>
 </div>

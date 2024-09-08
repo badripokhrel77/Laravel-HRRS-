@@ -40,13 +40,20 @@
                                         <a href="{{ url('book', ['room' => $room->id]) }}" class="text-primary">Book
                                             Now</a>
                                     </button>
+                                    <style>
+                                        .btn:hover .text-primary {
+                                            color: white !important;
+                                        }
+                                    </style>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
+
             </div>
         </div>
     </div>
+    
     <!-- end our_room -->
 @endsection

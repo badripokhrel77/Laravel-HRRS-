@@ -38,6 +38,11 @@
                 class="{{ request()->is('admin/userinfo') ? 'active-link' : '' }}">
                 <i class="fa-solid fa-user" style="margin-right: 8px;"></i> User Info
             </a>
+            <a href="{{ url('admin/roomcategory') }}"
+                style="color: rgb(17, 14, 14); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"
+                class="{{ request()->is('admin/roomcategory') ? 'active-link' : '' }}">
+                <i class="fa-solid fa-user" style="margin-right: 8px;"></i> Room Category
+            </a>
 
             <a href="{{ url('admin/rooms') }}"
                 style="color: rgb(29, 24, 24); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"

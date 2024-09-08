@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roombook', function (Blueprint $table) {
+        Schema::create('room_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('name');
-            $table->string('phone');
-            $table->string('checkin');
-            $table->string('checkout');
-            $table->string('guestn');
-            $table->string('message');
+            $table->string('title');
+            $table->string('image'); 
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roombook');
+        Schema::dropIfExists('room_categories');
     }
 };

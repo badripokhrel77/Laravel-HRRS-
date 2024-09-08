@@ -30,8 +30,8 @@ class RoomBook extends Model
     ];
 
     // Example of a relationship (if applicable)
-    // public function room()
-    // {
-    //     return $this->belongsTo(Room::class);
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

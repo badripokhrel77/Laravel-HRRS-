@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Room;
+use App\Models\RoomCategory;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -16,5 +17,11 @@ class RoomController extends Controller
     {
         $rooms = Room::all();
         return view('room.index', compact('rooms'));
+    }
+    public function categoryWiseRoom($category_id)
+    {
+        $rooms = Room::where('category_id',$category_id)->get();
+        $category=RoomCategory::findOrFail($category_id);
+        return view('frontend.category-detail', compact('rooms','category'));
     }
 }

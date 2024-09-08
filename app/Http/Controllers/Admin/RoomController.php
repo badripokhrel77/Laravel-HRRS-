@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Room;
+use App\Models\RoomCategory;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -17,12 +18,17 @@ class RoomController extends Controller
 
     public function create()
     {
-        return view('admin/room/create');
+        
+        return view('admin/room/create',[
+'categories'=> RoomCategory::all()
+        ]);
+       
     }
 
     public function store(Request $request)
     {
         $room =new Room();
+        $room->category_id = $request->category_id;
         $room->name = $request->name;
         $room->description = $request->description;
         $room->price = $request->price;

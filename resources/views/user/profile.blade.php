@@ -2,7 +2,7 @@
 @section('content')
     <style>
         body {
-            margin-top: 20px;
+            margin-top: 0px;
             background-color: #e2e8f0;
             color: #1a202c;
         }
@@ -145,16 +145,6 @@
                     </li>
                 </ol>
             </nav>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -258,24 +248,31 @@
                                     <img class="img-account-profile rounded-circle mb-2"
                                         src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/profile.jpg') }}"
                                         alt="Profile Picture" style="width: 150px; height: 150px;">
+
                                     <!-- Profile picture help block-->
                                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 2 MB</div>
                                     <!-- Profile picture upload form-->
-                                    <form action="{{ route('profile.updateImage') }}" method="POST" enctype="multipart/form-data">
+                                    <!-- Profile picture upload form-->
+                                    <form action="{{ route('profile.updateImage') }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
-                                        <div class="form-group">
-                                            <label for="fileInput" class="btn btn-primary">choose image</label>
-                                            <input type="file" id="fileInput" name="image" class="d-none" accept="image/*">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">upload</button>
+                                        <input type="file" name="image" class="form-control-file" accept="image/*">
+                                        <button class="btn btn-primary" type="submit">Upload</button>
                                     </form>
-                                    
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
 
                                 </div>
                             </div>
                         </div>
-
 
 
                         <div class="col-xl-8">

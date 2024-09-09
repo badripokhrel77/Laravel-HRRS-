@@ -22,11 +22,9 @@
         <!-- Sidebar -->
         <div class="col-sm-2"
             style="background-color: #d0e0f1; color: rgb(19, 16, 16); text-align: center; height: 100vh; padding-top: 20px; position: sticky; top: 0;">
-            <div
-                style="background-color: #d0e2f5; color: rgb(26, 23, 23); padding: 15px; text-align: center; margin-bottom: 20px; font-weight: bold;">
-                Admin Dashboard
-            </div>
-
+    
+            <a href=" {{ url('home') }}"><img src="{{ asset('images/logohrr.png') }}" alt="HRRS" style="width: 80px;"/> </a>
+            <hr class="mt-2 mb-2">
             <a href="{{ url('admin/dashboard') }}"
                 style="color: rgb(17, 14, 14); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"
                 class="{{ request()->is('admin/dashboard') ? 'active-link' : '' }}">

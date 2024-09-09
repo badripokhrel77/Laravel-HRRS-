@@ -78,18 +78,23 @@
                                             <i class="fa-solid fa-address-book" style="margin-right: 8px;"></i>Contact Us</a>
                                     </li>
                                 </ul>
+                                
                                 <ul class="navbar-nav ms-auto">
                                     @if (auth()->check())
                                         <li class="nav-item dropdown ">
                                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
                                                 role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
-                                                <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                                                {{-- <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
+                                                {{ Auth::user()->f_name }} --}}
+                                                <img class="img-account-profile rounded-circle mb-2"
+                                                src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/profile.jpg') }}"
+                                                alt="Profile Picture" style="width: 20px; height: 20px; object-fit: cover; margin-right: 8px;">
                                                 {{ Auth::user()->f_name }}
                                             </a>
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
                                                 <!-- Dashboard Link -->
-                                                <a class="dropdown-item" href="{{ url('user/dashboard') }}">
+                                                <a class="dropdown-item" href="{{ url('user/profile') }}">
                                                     <i class="fa-solid fa-user" style="margin-right: 8px;"></i>
                                                     {{ __('Profile') }}
                                                 </a>
@@ -114,6 +119,7 @@
                                         </li>
                                     @endif
                                 </ul>
+                                
                             </div>
                         </nav>
                     </div>

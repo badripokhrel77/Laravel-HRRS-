@@ -54,14 +54,14 @@ Route::prefix('admin')->middleware(['is_auth','is_admin'])->group(function(){
 
 // User routes
 Route::prefix('user')->middleware(['is_auth'])->group(function(){
-    Route::get('/dashboard', [UserController::class, 'index']);
+    Route::get('/profile', [UserController::class, 'index']);
     Route::resource('profile', App\Http\Controllers\User\ProfileController::class);
     Route::resource('reservedroom', App\Http\Controllers\User\ReservedRoomController::class);
 
     Route::post('/profile/change-password', [App\Http\Controllers\User\ProfileController::class, 'changePassword'])->name('password.change');
 
     // Route for updating profile image
-    Route::put('/profile/update-image', [App\Http\Controllers\User\ProfileController::class, 'updateImage'])->name('profile.updateImage');
+    route::put('/profile-update-image', [App\Http\Controllers\User\ProfileController::class, 'updateImage'])->name('profile.updateImage');
 });
 
 

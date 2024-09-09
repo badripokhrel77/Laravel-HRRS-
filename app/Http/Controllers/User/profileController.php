@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
@@ -44,56 +45,46 @@ class profileController extends Controller
         $user->phone = $request->phone;
         $user->email = $request->email;
 
-        $user-> save(); // Save the updated profile
+        $user->save(); // Save the updated profile
         return back()->with('success', 'User details updated successfully!');
     }
+    public function updateImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+        ]);
 
-    public function changePassword(Request $request)
-{
-    // Validate the form inputs
-    $request->validate([
-        'current_password' => 'required',
-        'new_password' => 'required|string|min:8|confirmed',
-    ]);
+        $user = Auth::user();
 
-    // Check if the current password matches
-    if (!Hash::check($request->current_password, Auth::user()->password)) {
-        return back()->withErrors(['current_password' => 'Current password is incorrect']);
-    }
+        if ($request->hasFile('image')) {
+            // Store the uploaded image in the storage
+            $imagePath = $request->file('image')->store('profile_images', 'public');
 
-    // Update the user's password
-    $user = Auth::user();
-    $user->password = Hash::make($request->new_password);
-    $user->save();
-
-    return back()->with('success', 'Password changed successfully!');
-}
-
-public function updateImage(Request $request)
-{
-    // Validate the uploaded file
-    $request->validate([
-        'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-
-    $user = Auth::user();
-
-    // Check if a file was uploaded
-    if ($request->hasFile('image')) {
-        // Delete the old image if it exists
-        if ($user->image && Storage::exists('public/' . $user->image)) {
-            Storage::delete('public/' . $user->image);
+            // Update the user's image path in the database
+            $user->image = $imagePath;
+            $user->save();
         }
 
-        // Store the new image
-        $imagePath = $request->file('image')->store('profile_images', 'public');
-        $user->image = $imagePath;
+        return redirect()->back()->with('success', 'Profile image updated successfully');
+    }
+    public function changePassword(Request $request)
+    {
+        // Validate the form inputs
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Check if the current password matches
+        if (!Hash::check($request->current_password, Auth::user()->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect']);
+        }
+
+        // Update the user's password
+        $user = Auth::user();
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return back()->with('success', 'Profile picture updated successfully!');
+        return back()->with('success', 'Password changed successfully!');
     }
-
-    return back()->with('error', 'No image file was uploaded.');
-}
-
 }

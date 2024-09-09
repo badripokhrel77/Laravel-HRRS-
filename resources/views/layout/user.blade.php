@@ -18,12 +18,10 @@
     <div class="row no-gutters">
         <!-- Sidebar -->
         <div class="col-sm-2"
-            style="background-color: rgb(158, 208, 214); color: rgb(255, 254, 254); height: 100vh; padding-top: 0; position: sticky; top: 0;">
-            <div
-                style="background-color: #d0e2f5; color: rgb(26, 23, 23); padding: 15px; text-align: center; font-weight: bold;">
-                User Dashboard
-            </div>
+            style="background-color: rgb(208, 226, 228); color: rgb(255, 254, 254); height: 100vh; padding-top: 0; position: sticky; top: 0;">
+            <a href=" {{ url('home') }}"><img src="{{ asset('images/logohrr.png') }}" alt="HRRS" style="width: 80px; margin-left:70px; margin-top:6px;"/> </a>
 
+            <hr class="mt-2 mb-2">
             <a href="{{ url('user/profile') }}"
                 style="color: rgb(15, 15, 15); display: block; padding: 10px 20px; text-decoration: none; margin: 10px 0; border-radius: 4px; transition: background 0.3s; border-left: 4px solid transparent; text-align: left;"
                 class="{{ request()->is('user/profile') ? 'active-link' : '' }}">

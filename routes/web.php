@@ -36,7 +36,9 @@ Route::get('/category/{category_id}',[RoomController::class,'categoryWiseRoom'])
 
 //Book
 Route::get('/book/{id}',[RoomBookController::class,'book'])->middleware('auth');;
-// Route::get('/bookview/{id)',[RoomBookController::class,'bookview']);
+// Route for Book View with ID parameter
+Route::get('/bookview/{id}', [RoomBookController::class, 'bookview'])->name('bookview');
+
 Route::post('/book',[RoomBookController::class,'store']);
 
 // contact

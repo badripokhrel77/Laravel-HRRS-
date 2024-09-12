@@ -47,7 +47,7 @@
     }
 </style>
 @section('content')
-
+        {{-- {{ $room }} --}}
     <div class="container-fluid p-0" style="min-height: 100vh; display: flex; align-items: stretch;">
         <div class="row no-gutters w-100">
             <!-- Form Column -->
@@ -62,17 +62,32 @@
 
                     <form action="{{ url('book') }}" method="post">
                         @csrf
-
+                        <div class="form-group">
+                            
+                            <input type="hidden" class="form-control" id="room_id" name="room_id"
+                                value="{{ $room->id}}">
+                        </div>
                         <div class="form-group">
                             <label for="fullName" class="text-dark">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" name="user_id"
+                            <input type="text" class="form-control" id="fullName" name="fullname"
                                 value="{{ $user->f_name }} {{ $user->l_name }}" placeholder="Full Name">
                         </div>
 
                         <div class="form-group">
                             <label for="phone" class="text-dark">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="user_id"
+                            <input type="tel" class="form-control" id="phone" name="phone"
                                 value="{{ $user->phone }}" placeholder="Phone Number">
+                        </div>
+                        <div class="form-group">
+                            
+                            <input type="hidden" class="form-control" id="room_id" name="roomtype"
+                                value="{{ $room->category->title}}">
+                        </div>
+
+                        <div class="form-group">
+                            
+                            <input type="hidden" class="form-control" id="room_id" name="roomno"
+                                value="{{ $room->name}}">
                         </div>
 
                         <div class="form-row">
@@ -96,7 +111,7 @@
                             <label for="specialRequests" class="text-dark">Special Requests</label>
                             <textarea class="form-control" id="specialRequests" name="message" rows="3" placeholder="Any special requests?"></textarea>
                         </div>
-
+                        <input type="hidden" name="payment_type" id="payment_type" value="cash">
                         <div class="radio-button-group mts">
                             <div class="item">
                                 <input type="radio" name="payment_type" class="radio-button" value="cash" id="button1"
@@ -193,17 +208,23 @@
 @endsection
 
 @section('script')
-    <script>
-        $('.radio-button').click(function() {
-            if ($(this).val() == 'online') {
-                $('.cash-section').hide();
-                $('.online-section').show();
-            } else {
-                $('.cash-section').show();
-                $('.online-section').hide();
-            }
-        });
-    </script>
+<script>
+    $('.radio-button').click(function() {
+        var paymentType = $(this).val();
+
+        // Update the hidden input field value based on selected payment type
+        $('#payment_type').val(paymentType);
+
+        if (paymentType == 'online') {
+            $('.cash-section').hide();
+            $('.online-section').show();
+        } else {
+            $('.cash-section').show();
+            $('.online-section').hide();
+        }
+    });
+</script>
+
     <script>
         var config = {
             // replace the publicKey with yours

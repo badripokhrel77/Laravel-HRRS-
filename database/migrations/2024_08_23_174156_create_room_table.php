@@ -12,13 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('room', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->id(); // Primary key
+            $table->unsignedBigInteger('category_id'); // Foreign key referencing room_categories
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
             $table->string('image');
             $table->timestamps();
+
+            // Define foreign key constraint
+           
         });
     }
 

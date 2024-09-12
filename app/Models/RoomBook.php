@@ -20,7 +20,8 @@ class RoomBook extends Model
         'roomtype',
         'roomno',
         'guestn',
-        'message'
+        'message',
+        'status'
     ];
 
     // If you have any date fields, specify them here

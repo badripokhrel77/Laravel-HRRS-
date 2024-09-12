@@ -31,7 +31,7 @@
                             <figure><img src="{{ asset($room->image) }}" alt="#" /></figure>
                         </div>
                         <div class="bed_room">
-                            <h3>{{ $room->name }} Room</h3>
+                            <h3>{{ $room->name }}</h3>
                             <div class="room_price text-center">
                                 <h4 class="text-primary" style="font-weight: bold;">Rs.{{ $room->price }}/night</h4>
                                 

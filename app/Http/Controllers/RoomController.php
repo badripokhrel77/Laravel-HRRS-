@@ -10,7 +10,7 @@ class RoomController extends Controller
     public function room(){
         $rooms = Room::all();
          
-        return view('frontend.room.index', compact('rooms'));
+        return view('frontend.room.index', [compact('rooms'),'categories'=> RoomCategory::all(),'rooms' => Room::all(),]);
     }
 
     public function index()

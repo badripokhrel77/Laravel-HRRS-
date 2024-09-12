@@ -129,7 +129,33 @@
         }
 
         .radio-button-group .radio-button:checked+label:hover {
-            background-color: #0056b3;
+          
+          background-color: #0056b3;
+        }
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .img-account-profile {
+                height: 5rem;
+            }
+
+            .radio-button-group .radio-button+label {
+                padding: 10px 15px;
+                font-size: 0.75rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .radio-button-group {
+                flex-direction: column;
+            }
+
+            .radio-button-group .item {
+                margin: 10px 0;
+            }
         }
     </style>
     <div class="container">

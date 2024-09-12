@@ -555,12 +555,21 @@ button {
 
 .our_room .room .room_img figure {
      margin: 0;
-}
-
-.our_room .room .room_img figure img {
      width: 100%;
+     height: 280px; /* Set a fixed height for the image container */
+     overflow: hidden;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+ 
+ .our_room .room .room_img figure img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover; /* Ensures the image covers the container */
      transition: all .5s;
-}
+ }
+ 
 
 .our_room .room .room_img figure img:hover {
      transform: scale(1.2);

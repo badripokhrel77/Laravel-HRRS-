@@ -37,7 +37,7 @@ Route::get('/category/{category_id}',[RoomController::class,'categoryWiseRoom'])
 //Book
 Route::get('/book/{id}',[RoomBookController::class,'book'])->middleware('auth');;
 // Route for Book View with ID parameter
-Route::get('/bookview/{id}', [RoomBookController::class, 'bookview'])->name('bookview');
+route::get('/bookview/{id}', [RoomBookController::class, 'bookview'])->name('bookview');
 
 Route::post('/book',[RoomBookController::class,'store']);
 
@@ -54,11 +54,16 @@ Route::prefix('admin')->middleware(['is_auth','is_admin'])->group(function(){
     Route::resource('roombook', App\Http\Controllers\Admin\BookedController::class);
 });
 
-// User routes
+/// User routes
 Route::prefix('user')->middleware(['is_auth'])->group(function(){
     Route::get('/profile', [UserController::class, 'index']);
     Route::resource('profile', App\Http\Controllers\User\ProfileController::class);
     Route::resource('reservedroom', App\Http\Controllers\User\ReservedRoomController::class);
+
+    // Custom route for viewing a single reservation
+    Route::get('/reservedroom/{id}/view', [App\Http\Controllers\User\ReservedRoomController::class, 'bookview'])->name('reservedroom.bookview');
+
+
 
     Route::post('/profile/change-password', [App\Http\Controllers\User\ProfileController::class, 'changePassword'])->name('password.change');
 

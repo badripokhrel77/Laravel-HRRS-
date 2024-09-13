@@ -1,97 +1,58 @@
 @extends('layout.main')
 @section('title', 'Reservation Details')
 @section('content')
-<div style=" background-color:rgb(167, 189, 193); display: flex; justify-content: center; align-items: center; height: 100vh;">
+<div class="d-flex justify-content-center align-items-center" style="background-color: rgb(167, 189, 193); height: 100vh;">
     @if (session()->has('success'))
-    <div class="alert bg-success">{{ session()->get('success') }}</div>
-@endif
+        <div class="alert alert-success">{{ session()->get('success') }}</div>
+    @endif
     <div class="col-lg-8">
-        <div class="card mb-4" style="border: 1px solid rgb(2, 9, 71);">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Full Name :</p>
+        <div class="card shadow-lg mb-4" style="border: none;">
+            <div class="card-body p-4">
+                <h4 class="text-center mb-4" style="color: rgb(2, 9, 71);">Reservation Details</h4>
+                @php
+                    $fields = [
+                        'Full Name' => $book->name,
+                        'Phone Number' => $book->phone,
+                        'Check In Date' => $book->checkin,
+                        'Check Out Date' => $book->checkout,
+                        'Room Type' => $book->roomtype,
+                        'Room Name' => $book->roomno,
+                        'Number of Guests' => $book->guestn,
+                    ];
+                @endphp
+
+                @foreach ($fields as $label => $value)
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0 font-weight-bold" style="color: rgb(2, 9, 71);">{{ $label }}:</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ $value }}</p>
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->name }}</p>
+                    <hr class="my-2">
+                @endforeach
+
+                <div class="row mb-3">
+                    <div class="col-sm-4">
+                        <p class="mb-0 font-weight-bold" style="color: rgb(2, 9, 71);">Special Request:</p>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Phone Number :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->phone }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Check In Date :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->checkin }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Check Out Date :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->checkout}}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Room Type :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->roomtype }}</p>
+                    <div class="col-sm-8">
+                        <div class="alert alert-info" role="alert">
+                            {{ $book->message }}
+                        </div>
                     </div>
                 </div>
-                <hr>
+                
                 <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Room Name :</p>
+                    <div class="col-sm-4">
+                        <p class="mb-0 font-weight-bold" style="color: rgb(2, 9, 71);">Payment Status:</p>
                     </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->roomno }}</p>
+                    <div class="col-sm-8">
+                        <span class="badge badge-{{ $book->status == 'pending' ? 'danger' : 'success' }} p-2">
+                            {{ ucfirst($book->status) }}
+                        </span>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Number of Guests :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->guestn }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Special Request :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{ $book->message }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <p class="mb-0" style="color: rgb(2, 9, 71);">Payment Status :</p>
-                    </div>
-                    <div class="col-sm-9">
-                        @if($book->status == 'pending')
-                            <label class="badge badge-danger">Pending</label>
-                        @else
-                            <label class="badge badge-success">{{ $book->status }}</label>
-                        @endif
-                    </div>
-                    
                 </div>
             </div>
         </div>

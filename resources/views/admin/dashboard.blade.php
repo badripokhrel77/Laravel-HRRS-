@@ -1,5 +1,7 @@
 @extends('layout.admin')
 
+@section('title', 'Admin Dashboard')
+
 @section('content')
 <div class="container-fluid">
     <h2 class="mb-4 text-center">Admin Dashboard</h2>
@@ -10,7 +12,7 @@
             <div class="card text-white bg-primary h-100">
                 <div class="card-header">Total Users</div>
                 <div class="card-body">
-                    <h5 class="card-title">150</h5>
+                    <h5 class="card-title">{{ $totalUsers }}</h5>
                     <p class="card-text">Registered users on the platform</p>
                 </div>
             </div>
@@ -21,7 +23,7 @@
             <div class="card text-white bg-success h-100">
                 <div class="card-header">Booked Rooms</div>
                 <div class="card-body">
-                    <h5 class="card-title">120</h5>
+                    <h5 class="card-title">{{ $bookedRooms }}</h5>
                     <p class="card-text">Rooms booked in the last 30 days</p>
                 </div>
             </div>
@@ -32,7 +34,7 @@
             <div class="card text-white bg-warning h-100">
                 <div class="card-header">Available Rooms</div>
                 <div class="card-body">
-                    <h5 class="card-title">25</h5>
+                    <h5 class="card-title">{{ $availableRooms }}</h5>
                     <p class="card-text">Rooms available for booking</p>
                 </div>
             </div>
@@ -43,7 +45,7 @@
             <div class="card text-white bg-danger h-100">
                 <div class="card-header">Transactions</div>
                 <div class="card-body">
-                    <h5 class="card-title">$12,300</h5>
+                    <h5 class="card-title">${{ number_format($totalRevenue, 2) }}</h5>
                     <p class="card-text">Total revenue this month</p>
                 </div>
             </div>
@@ -57,7 +59,6 @@
                 <div class="activity-card-header bg-light p-3">
                     <h5 class="mb-0">Recent Activity</h5>
                 </div>
-
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">User John booked a Deluxe Room on 08/09/2024</li>
                     <li class="list-group-item">User Sarah checked out from a Standard Room</li>
@@ -69,7 +70,7 @@
     </div>
 </div>
 
-<!-- Add some inline CSS to control card heights and zoom-in effect -->
+<!-- Inline CSS for styling -->
 <style>
     .card-body {
         display: flex;
@@ -85,7 +86,6 @@
 
     .card:hover {
         transform: scale(1.05); /* Slight zoom-in effect */
-        transition: transform 0.3s ease-in-out; /* Smooth transition */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for focus effect */
     }
 

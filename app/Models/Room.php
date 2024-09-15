@@ -14,6 +14,7 @@ class Room extends Model
         'description',
         'price',
         'image',
+        'room_status',
     ];
 
     public function category(){

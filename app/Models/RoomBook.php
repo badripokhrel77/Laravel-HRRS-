@@ -21,7 +21,8 @@ class RoomBook extends Model
         'roomno',
         'guestn',
         'message',
-        'status'
+        'status',
+        'room_status'
     ];
 
     // If you have any date fields, specify them here
@@ -34,5 +35,10 @@ class RoomBook extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function room()
+    {
+        return $this->hasOne(Room::class, 'id', 'room_id');
     }
 }

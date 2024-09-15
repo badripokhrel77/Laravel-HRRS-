@@ -18,6 +18,16 @@
     .btn-action i {
         margin-right: 0; /* Remove margin for action button icons */
     }
+
+    .pagination .page-item.disabled .page-link {
+        pointer-events: none;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: rgb(107, 177, 224);
+        border-color: rgb(107, 177, 224);
+        color: rgb(7, 0, 0);
+    }
 </style>
 
 @if (session()->has('success'))
@@ -26,7 +36,15 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="mb-0">Users Details</h1>
-    {{-- <a href="{{ route('rooms.create') }}" class="btn btn-primary">Add Room</a> --}}
+</div>
+
+<!-- Add search form -->
+<div class="mb-3 d-flex justify-content-end">
+    <form action="{{ route('userinfo.index') }}" method="GET" class="d-flex">
+        <!-- Smaller search input box -->
+        <input type="text" name="search" class="form-control me-2" style="width: 200px;" placeholder="Search by name" value="{{ request('search') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 </div>
 
 <!-- Wrap the table inside a responsive container -->
@@ -45,7 +63,7 @@
         <tbody>
             @forelse ($userinfo as $key => $User)
                 <tr>
-                    <td>{{ ++$key }}</td>
+                    <td>{{ $key + $userinfo->firstItem() }}</td> <!-- Correct row numbering -->
                     <td>{{ $User->f_name }} {{ $User->l_name }}</td>
                     <td>{{ $User->address }}</td>
                     <td>{{ $User->phone }}</td>
@@ -79,6 +97,34 @@
 </div>
 
 <div class="mt-3">
-    {{ $userinfo->links() }}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if ($userinfo->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link" href="{{ $userinfo->previousPageUrl() }}" aria-label="Previous">Previous</a>
+                </li>
+            @endif
+
+            @for ($i = 1; $i <= $userinfo->lastPage(); $i++)
+                <li class="page-item {{ $i == $userinfo->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $userinfo->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            @if ($userinfo->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link" href="{{ $userinfo->nextPageUrl() }}" aria-label="Next">Next</a>
+                </li>
+            @else
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            @endif
+        </ul>
+    </nav>
 </div>
 @endsection

@@ -59,7 +59,15 @@
                     @if (session()->has('success'))
                         <div class="alert bg-success">{{ session()->get('success') }}</div>
                     @endif
-
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                     <form action="{{ url('book') }}" method="post">
                         @csrf
                         <div class="form-group">
@@ -225,7 +233,7 @@
     });
 </script>
 
-    <script>
+    {{-- <script>
         var config = {
             // replace the publicKey with yours
             "publicKey": "17663fc24f63497286827bd8be85ef36",
@@ -259,5 +267,5 @@
             // minimum transaction amount must be 10, i.e 1000 in paisa.
             checkout.show({amount: 1000});
         }
-    </script>
+    </script> --}}
 @endsection

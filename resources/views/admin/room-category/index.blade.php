@@ -18,6 +18,16 @@
     .btn-action i {
         margin-right: 0; /* Remove margin for action button icons */
     }
+
+    .pagination .page-item.disabled .page-link {
+        pointer-events: none;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: rgb(107, 177, 224);
+        border-color: rgb(107, 177, 224);
+        color: rgb(7, 0, 0);
+    }
 </style>
 
 @if (session()->has('success'))
@@ -27,6 +37,15 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="mb-0">Room Categories</h1>
     <a href="{{ route('roomcategory.create') }}" class="btn btn-primary">Add Room Category</a>
+</div>
+
+<!-- Add search form -->
+<div class="mb-3 d-flex justify-content-end">
+    <form action="{{ route('roomcategory.index') }}" method="GET" class="d-flex">
+        <!-- Smaller search input box -->
+        <input type="text" name="search" class="form-control me-2" style="width: 200px;" placeholder="Search by title" value="{{ request('search') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 </div>
 
 <!-- Wrap the table inside a responsive container -->
@@ -81,6 +100,35 @@
 </div>
 
 <div class="mt-3">
-    {{ $categories->links() }}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if ($categories->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link" href="{{ $categories->previousPageUrl() }}" aria-label="Previous">Previous</a>
+                </li>
+            @endif
+
+            @for ($i = 1; $i <= $categories->lastPage(); $i++)
+                <li class="page-item {{ $i == $categories->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $categories->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+
+            @if ($categories->hasMorePages())
+                <li class="page-item">
+                    <a class="page-link" href="{{ $categories->nextPageUrl() }}" aria-label="Next">Next</a>
+                </li>
+            @else
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            @endif
+        </ul>
+    </nav>
 </div>
+
 @endsection

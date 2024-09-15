@@ -2,13 +2,14 @@
 @section('title', 'Reservation Details')
 @section('content')
 <div class="d-flex justify-content-center align-items-center" style="background-color: rgb(167, 189, 193); height: 100vh;">
-    @if (session()->has('success'))
-        <div class="alert alert-success">{{ session()->get('success') }}</div>
-    @endif
+   
     <div class="col-lg-8">
         <div class="card shadow-lg mb-4" style="border: none;">
             <div class="card-body p-4">
                 <h4 class="text-center mb-4" style="color: rgb(2, 9, 71);">Reservation Details</h4>
+                @if (session()->has('success'))
+                <div class="alert alert-success">{{ session()->get('success') }}</div>
+            @endif
                 @php
                     $fields = [
                         'Full Name' => $book->name,

@@ -9,19 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('khalti_payments', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('transactions', function (Blueprint $table) {
+        $table->id();
+        $table->decimal('amount', 8, 2); // Adjust as needed
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('khalti_payments');
+        Schema::dropIfExists('transactions');
     }
 };

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RoomBook;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class RoomBookController extends Controller
 {
@@ -19,44 +20,115 @@ class RoomBookController extends Controller
     // View bookings
     public function bookview($id)
     {
-        $book= RoomBook::findOrFail($id);
+        $book = RoomBook::findOrFail($id);
         return view('frontend.room.bookview', compact('book'));
     }
 
     // Store booking details
     public function store(Request $request)
     {
-    
+        // Validate the booking request
+        $validatedData = $request->validate([
+            'room_id' => 'required|exists:room,id',
         
+        
+            'checkin' => 'required|date|after_or_equal:today',
+            'checkout' => 'required|date|after:checkin',
+            'guestn' => 'required|integer|min:1|max:10',
+            'payment_type' => 'required|string|in:cash,online',
+        ]);
+    
         $user = auth()->user(); // Ensure user is authenticated
-        // Find the room by ID (Make sure room_id is passed from the form)
-        // $room = Room::findOrFail($request->room_id); 
-
+        $room = Room::findOrFail($request->room_id);
+    
         // Create a new booking instance
         $roombook = new RoomBook();
         $roombook->user_id = $user->id;
-        $roombook->room_id = $request->room_id;
-        $roombook->name = $user->f_name . ' ' . $user->l_name; // Concatenate first and last name
-        $roombook->phone = $user->phone;
-        $roombook->roomtype = $request->roomtype; // Reference room category ID
-        $roombook->roomno = $request->roomno; // Use the room name as the room number
-        $roombook->checkin = $request->checkin;
-        $roombook->checkout = $request->checkout;
-        $roombook->guestn = $request->guestn;
+        $roombook->room_id = $validatedData['room_id'];
+        $roombook->name = $request->fullname;
+        $roombook->phone =$request->phone;
+        $roombook->checkin = $validatedData['checkin'];
+        $roombook->checkout = $validatedData['checkout'];
+        $roombook->guestn = $validatedData['guestn'];
         $roombook->message = $request->message;
-        
-        // Handle payment type and set booking status accordingly
-        if ($request->payment_type == 'online') {
-            $roombook->status = 'success'; // Online payment success
-            // Handle online payment logic (e.g., integration with payment gateway)
-        } else {
-            $roombook->status = 'pending'; // Cash payment or offline booking
-        }
+        $roombook->roomtype = $room->category->title ?? '-';
+        $roombook->roomno = $room->name;
 
-        // Save the booking to the database
+    
+        // Initially set status to pending
+        $roombook->status = 'pending';
         $roombook->save();
-       
-        // Return response, such as redirecting the user or showing a success message
+
+        $room->room_status = 'booked';
+        $room->update(); 
+    
+    
+    
+        // Handle payment
+        if ($validatedData['payment_type'] === 'online') {
+            $response = $this->payWithKhalti($roombook);
+            $d_res = json_decode($response);
+            if ($d_res && isset($d_res->payment_url)) {
+                return redirect($d_res->payment_url);
+            } else {
+                
+                return redirect()->route('roombook.index')->with('error', 'Khalti payment failed. Contact admin.');
+            }
+        }
+    
+        // Return response
         return redirect()->route('bookview', ['id' => $roombook->id])->with('success', 'Booking successful!');
+    }
+    
+
+    public function payWithKhalti($roombook)
+    {
+        $amount = $roombook->room->price;
+        $amount_paisa = $amount * 100;
+        $orderId = "{$roombook->id}";
+        $orderName = $roombook->room->name;
+        $customer = [
+            'name' => $roombook->name,
+            'email' => '',
+            'phone' => "{$roombook->phone}"
+        ];
+        $product_detail = [
+            "identity" => $roombook->room->id,
+            "name" => $orderName,
+            "total_price" => "$amount_paisa",
+            "quantity" => '1',
+        ];
+        $khalti_base_url = 'https://a.khalti.com/api/v2/';
+        $init_url = 'epayment/initiate/';
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'key bce58b9ec7d1478f916e78c13f4660ec'
+        ])->post($khalti_base_url . $init_url, [
+            'return_url' => "http://localhost:8000/khalti/callback",
+            'website_url' => "http://localhost:8000",
+            'amount' => "$amount_paisa",
+            'purchase_order_id' => $orderId,
+            'purchase_order_name' => $orderName,
+            'customer_info' => $customer,
+            // 'product_details' =>  $product_detail,
+            // 'merchant_username' => '',
+            // 'merchant_extra' => ''
+        ]);
+        return ($response);
+    }
+
+    public function khaltiCallback(Request $request)
+    {
+        // dd($request->all());
+        $roombook =RoomBook::findOrfail($request->purchase_order_id);
+        $roombook->status = 'success';
+        $roombook->update();
+       
+        
+        // Return response
+        return redirect()->route('bookview', ['id' => $roombook->id])->with('success', 'Payment and Booking successful!');
+   
+
     }
 }

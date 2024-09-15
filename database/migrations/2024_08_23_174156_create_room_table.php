@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
             $table->string('image');
+            $table->enum('room_status', ['available', 'booked'])->default('available');
             $table->timestamps();
 
             // Define foreign key constraint

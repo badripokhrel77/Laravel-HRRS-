@@ -41,18 +41,22 @@ route::get('/bookview/{id}', [RoomBookController::class, 'bookview'])->name('boo
 
 Route::post('/book',[RoomBookController::class,'store']);
 
+Route::get('/khalti/callback',[RoomBookController::class,'khaltiCallback']);
+
 // contact
 // Route::get('/contact', [ContactController::class, 'index']);
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 
 // admin routes
-Route::prefix('admin')->middleware(['is_auth','is_admin'])->group(function(){
+Route::prefix('admin')->middleware(['is_auth','is_admin'])->group(function() {
     Route::get('/dashboard', [AdminController::class, 'index']);
+    
     Route::resource('rooms', App\Http\Controllers\Admin\RoomController::class);
     Route::resource('userinfo', App\Http\Controllers\Admin\UserinfoController::class);
     Route::resource('roomcategory', App\Http\Controllers\Admin\RoomCategoryController::class);
     Route::resource('roombook', App\Http\Controllers\Admin\BookedController::class);
 });
+
 
 /// User routes
 Route::prefix('user')->middleware(['is_auth'])->group(function(){

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Define foreign key constraint
-           
+            $table->foreign('category_id')->references('id')->on('room_categories')->onDelete('cascade');
         });
     }
 

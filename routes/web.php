@@ -8,6 +8,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\RoomController as AdminRoomController;
 use App\Http\Controllers\Admin\UserinfoController as AdminUserinfoController ;
 use App\Http\Controllers\Admin\BookedController as AdminBookedController ;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController ;
 
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -55,6 +56,7 @@ Route::prefix('admin')->middleware(['is_auth','is_admin'])->group(function() {
     Route::resource('userinfo', App\Http\Controllers\Admin\UserinfoController::class);
     Route::resource('roomcategory', App\Http\Controllers\Admin\RoomCategoryController::class);
     Route::resource('roombook', App\Http\Controllers\Admin\BookedController::class);
+    Route::resource('transactions', App\Http\Controllers\Admin\TransactionController::class);
 });
 
 

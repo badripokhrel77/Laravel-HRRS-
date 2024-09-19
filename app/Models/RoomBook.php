@@ -21,7 +21,6 @@ class RoomBook extends Model
         'roomno',
         'guestn',
         'message',
-        'status',
         'room_status'
     ];
 
@@ -41,4 +40,10 @@ class RoomBook extends Model
     {
         return $this->hasOne(Room::class, 'id', 'room_id');
     }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'id','roombook_id');
+    }
+    
 }

@@ -98,6 +98,30 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
+        <div class="form-group">
+            <label for="status">Change Payment Status</label>
+            <select id="status" name="status" @if($roomBook->transaction->payment_status == 'online') disabled  @endif   class="form-control">
+                <option value="pending" {{ $roomBook->transaction->payment_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="cash" {{ $roomBook->transaction->payment_status == 'cash' ? 'selected' : '' }}>Cash</option>
+                <option value="cash" disabled {{ $roomBook->transaction->payment_status == 'online' ? 'selected' : '' }}>Online</option>
+            </select>
+            @error('room_status')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="room_status">Choose Option</label>
+            <select id="room_status" name="room_status" class="form-control" required>
+                <option value="" disabled {{ old('room_status', $roomBook->room_status) == null ? 'selected' : '' }}>-- Select an Option --</option>
+                <option value="booked" {{ old('room_status', $roomBook->room_status) == 'booked' ? 'selected' : '' }}>Booked</option>
+                <option value="check-out" {{ old('room_status', $roomBook->room_status) == 'check-out' ? 'selected' : '' }}>Check Out</option>
+            </select>
+            @error('room_status')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        
 
         <div class="form-group">
             <button type="submit" class="btn-submit">Update</button>

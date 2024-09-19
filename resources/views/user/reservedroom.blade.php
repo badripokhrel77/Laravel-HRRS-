@@ -17,7 +17,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Full Name</td>
+                            <td>Ful Name</td>
                             <td>{{ $book->name }}</td>
                         </tr>
                         <tr>

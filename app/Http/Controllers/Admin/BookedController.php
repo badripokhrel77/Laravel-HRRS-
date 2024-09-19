@@ -3,46 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\RoomBook;
+use App\Models\Room;
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class BookedController extends Controller
 {
     public function index(Request $request)
-{
-    // Capture search input
-    $search = $request->input('search');
+    {
+        // Capture search input
+        $search = $request->input('search');
 
-    // Modify the query to handle searching by name or room number
-    $query = RoomBook::query();
-    if ($search) {
-        $query->whereHas('user', function($q) use ($search) {
-            $q->where('f_name', 'LIKE', "%{$search}%")
-              ->orWhere('l_name', 'LIKE', "%{$search}%");
-        })->orWhere('roomno', 'LIKE', "%{$search}%");
-    }
-
-    // Update the room status based on current date
-    $today = Carbon::today();
-    $query->get()->each(function ($roomBook) use ($today) {
-        if ($roomBook->room_status === null) {
-            if ($today->greaterThanOrEqualTo(Carbon::parse($roomBook->checkin)) &&
-                $today->lessThanOrEqualTo(Carbon::parse($roomBook->checkout))) {
-                $roomBook->update(['room_status' => 'check in']);
-            } elseif ($today->greaterThan(Carbon::parse($roomBook->checkout))) {
-                $roomBook->update(['room_status' => 'check out']);
-            }
+        // Modify the query to handle searching by name or room number
+        $query = RoomBook::query();
+        if ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('f_name', 'LIKE', "%{$search}%")
+                    ->orWhere('l_name', 'LIKE', "%{$search}%");
+            })->orWhere('roomno', 'LIKE', "%{$search}%");
         }
-    });
-
-    // Paginate the results and pass to the view
-    $roombook = $query->orderBy('id', 'desc')->paginate(7);
-
-    return view('admin.roombook.index', [
-        'roombook' => $roombook,
-    ]);
-}
+        // Paginate the results and pass to the view
+        $roombook = $query->with('transaction')->orderBy('id', 'desc')->paginate(7);
+        
+        return view('admin.roombook.index', [
+            'roombook' => $roombook,
+        ]);
+    }
 
     public function store(Request $request)
     {
@@ -57,7 +45,7 @@ class BookedController extends Controller
         ]);
 
         // Determine the status based on payment type
-        $status = $request->payment_type === 'online' ? 'success' : 'pending';
+        $status = $request->payment_type === 'online' ? 'pending' : 'cash'; // Changed to 'pending' for online payments
 
         // Create a new booking record
         RoomBook::create([
@@ -68,7 +56,7 @@ class BookedController extends Controller
             'guestn' => $request->guestn,
             'message' => $request->message,
             'payment_type' => $request->payment_type,
-            'status' => $status,
+            'status' => $request->payment_status,
             'room_status' => null, // Set the room status to 'check in'
         ]);
 
@@ -90,11 +78,11 @@ class BookedController extends Controller
     {
         // Validate the form inputs
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|regex:/^[\d\s\+\-\(\)]+$/|min:10|max:15',
+           
             'checkin' => 'required|date',
             'checkout' => 'required|date|after_or_equal:checkin',
             'guestn' => 'required|integer|min:1|max:10',
+            'room_status' => 'required|string|in:booked,check-in,check-out',
         ]);
 
         try {
@@ -108,7 +96,24 @@ class BookedController extends Controller
                 'checkin' => $request->checkin,
                 'checkout' => $request->checkout,
                 'guestn' => $request->guestn,
+                'room_status' => $request->room_status,
             ]);
+
+            $transaction = Transaction::where('roombook_id', $id)->first();
+            $transaction->payment_status = $request->status;
+            $transaction->update();
+
+            $room = Room::find($roomBook->room_id);
+
+            // Update the Room's status based on the RoomBook's status
+            if ($request->room_status === 'check-out') {
+                $room->room_status = 'available';
+            } else {
+                $room->room_status = 'booked';
+            }
+
+            // Save the Room's updated status
+            $room->save();
 
             return redirect(route('roombook.index'))->with('success', 'RoomBook details updated successfully!');
         } catch (\Exception $e) {
@@ -133,6 +138,10 @@ class BookedController extends Controller
     {
         // Find and delete the specific booking record
         $roombook = RoomBook::findOrFail($id);
+        $room = Room::find($roombook->room_id);
+        $room->room_status = "available";
+        $room->save();
+
         $roombook->delete();
 
         return redirect(route('roombook.index'))->with('success', 'Booked Room deleted successfully!');

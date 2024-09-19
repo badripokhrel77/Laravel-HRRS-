@@ -23,8 +23,8 @@ return new class extends Migration
             $table->date('checkout');   // Changed to date type for better date handling
             $table->unsignedInteger('guestn');  // Changed to unsignedInteger for guest count
             $table->text('message')->nullable();  // Set message as nullable
-            $table->string('status')->default('pending');  // Added default value for status
-            $table->string('room_status')->nullable();
+           
+            $table->string('room_status')->default('booked');
             $table->timestamps();
 
             // Foreign key constraints

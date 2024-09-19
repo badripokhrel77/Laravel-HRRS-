@@ -13,7 +13,12 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     // Specify the fields that are mass assignable
-    protected $fillable = ['amount', 'user_id', 'other_fields']; 
+    protected $fillable = ['pidx','payment_method','payment_status','amount', 'user_id', 'other_fields']; 
 
     // Add any other model configurations here
+    public function roomBook()
+{
+    return $this->belongsTo(RoomBook::class, 'roombook_id'); // Adjust the foreign key if necessary
+}
+
 }

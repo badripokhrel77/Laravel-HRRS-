@@ -4,15 +4,17 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="mb-4 text-center">Admin Dashboard</h2>
+    <h2 class="mb-4 text-center" style="font-size: 2.5rem;">Admin Dashboard</h2>
 
     <div class="row">
         <!-- Card 1: Total Users -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card text-white bg-primary h-100">
-                <div class="card-header">Total Users</div>
+            <div class="card text-white bg-primary h-100 shadow-lg">
+                <div class="card-header text-center font-weight-bold" style="font-size: 1.25rem;">
+                    Total Users
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ $totalUsers }}</h5>
+                    <h5 class="card-title display-4" style="font-size: 2.5rem;">{{ $totalUsers }}</h5>
                     <p class="card-text">Registered users on the platform</p>
                 </div>
             </div>
@@ -20,21 +22,25 @@
 
         <!-- Card 2: Booked Rooms -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card text-white bg-success h-100">
-                <div class="card-header">Booked Rooms</div>
+            <div class="card text-white bg-success h-100 shadow-lg">
+                <div class="card-header text-center font-weight-bold" style="font-size: 1.25rem;">
+                    Booked Rooms
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ $bookedRooms }}</h5>
-                    <p class="card-text">Rooms booked in the last 30 days</p>
+                    <h5 class="card-title display-4" style="font-size: 2.5rem;">{{ $bookedRooms->count() }}</h5>
+                    <p class="card-text">Rooms booked in the last 7 days</p>
                 </div>
             </div>
         </div>
 
         <!-- Card 3: Available Rooms -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card text-white bg-warning h-100">
-                <div class="card-header">Available Rooms</div>
+            <div class="card text-white bg-warning h-100 shadow-lg">
+                <div class="card-header text-center font-weight-bold" style="font-size: 1.25rem;">
+                    Available Rooms
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ $availableRooms }}</h5>
+                    <h5 class="card-title display-4" style="font-size: 2.5rem;">{{ $availableRooms }}</h5>
                     <p class="card-text">Rooms available for booking</p>
                 </div>
             </div>
@@ -42,57 +48,139 @@
 
         <!-- Card 4: Transactions -->
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card text-white bg-danger h-100">
-                <div class="card-header">Transactions</div>
+            <div class="card text-white bg-danger h-100 shadow-lg">
+                <div class="card-header text-center font-weight-bold" style="font-size: 1.25rem;">
+                    Transactions
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">${{ number_format($totalRevenue, 2) }}</h5>
+                    <h6> Rs.</h6>
+                    <h5 class="card-title display-4" style="font-size: 2.5rem;">
+                       {{ number_format($totalRevenue) }}
+                    </h5>
                     <p class="card-text">Total revenue this month</p>
                 </div>
             </div>
         </div>
     </div>
+    <hr>
 
-    <!-- Recent Activity Section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="activity-card mt-4 border rounded shadow-sm">
-                <div class="activity-card-header bg-light p-3">
-                    <h5 class="mb-0">Recent Activity</h5>
+    <!-- Booked Rooms Table -->
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card shadow-lg">
+                <div class="card-header font-weight-bold">
+                    Booked Rooms in the Last 7 Days
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">User John booked a Deluxe Room on 08/09/2024</li>
-                    <li class="list-group-item">User Sarah checked out from a Standard Room</li>
-                    <li class="list-group-item">Admin updated the Room Category list</li>
-                    <li class="list-group-item">Transaction of $300 processed by User Alex</li>
-                </ul>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">S.N</th>
+                                <th scope="col">Guest Name</th>
+                                <th scope="col">Check-in Date</th>
+                                <th scope="col">Check-out Date</th>
+                                <th scope="col">Room Type</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($bookedRooms as $key => $RoomBook)
+                                <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ $RoomBook->name }}</td>
+                                    <td>{{ $RoomBook->checkin }}</td>
+                                    <td>{{ $RoomBook->checkout }}</td>
+                                    <td>{{ $RoomBook->roomtype }}</td>
+                                    <td>{{ $RoomBook->transaction->payment_method ?? '-'}}</td>
+                                    <td>{{ $RoomBook->transaction->amount }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">No bookings available in the last 7 days.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 
 <!-- Inline CSS for styling -->
 <style>
+    /* Card and General Layout Styling */
     .card-body {
         display: flex;
         flex-direction: column;
         justify-content: center;
         text-align: center;
+        padding: 20px;
+        font-family: Arial, sans-serif;
     }
 
     .card {
         min-height: 150px;
-        transition: transform 0.3s ease-in-out;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: box-shadow 0.3s ease-in-out;
     }
 
     .card:hover {
-        transform: scale(1.05); /* Slight zoom-in effect */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for focus effect */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
     }
 
-    /* Recent Activity Styling */
-    .activity-card {
-        max-height: 400px;
-        overflow-y: auto;
+    .card-header {
+        font-size: 1.25rem;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .card-title {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+    }
+
+    .container-fluid {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Booked Table Styling */
+    .table {
+        font-family: Arial, sans-serif;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table thead th {
+        background-color: #e0f7fa; /* Light blue color */
+        color: #000; /* Text color, adjust as needed */
+    }
+
+    .table tbody tr:nth-child(odd) {
+        background-color: #e9ecef;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    .table td, .table th {
+        padding: 16px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* Remove Zoom Effect */
+    .card, .card:hover {
+        transform: none;
     }
 
     /* Responsive adjustments */
@@ -101,18 +189,22 @@
             min-height: 200px;
         }
 
-        h5.card-title {
-            font-size: 1.25rem; /* Adjust font size on smaller screens */
+        .card-title {
+            font-size: 2rem;
         }
 
         .card-text {
             font-size: 0.9rem;
         }
 
-        /* Ensure padding for smaller screens */
         .container-fluid {
             padding: 10px;
         }
+
+        .table td, .table th {
+            padding: 12px;
+        }
     }
 </style>
+
 @endsection

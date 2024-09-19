@@ -76,6 +76,7 @@
         <label for="price">Room Price</label>
         <input type="text" id="price" name="price" class="form-control" value="{{ $room->price  }}"  required>
     </div>
+
     <div class="form-group">
         <button type="submit" class="btn-submit">Update Room</button>
     </div>

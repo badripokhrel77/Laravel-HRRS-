@@ -8,21 +8,17 @@
         <div class="col-lg-10 col-md-12 col-sm-12">
             <div class="card shadow-lg border-0">
                 <div class="card-body p-4">
-                    <h4 class="text-center mb-4" style="color: #003366;">Reservation Details</h4>
+                    <h4 class="text-center mb-4" style="color: #003366;">Transaction Details</h4>
                     
                     @if (session()->has('success'))
                         <div class="alert alert-success">{{ session()->get('success') }}</div>
                     @endif
 
-                    @php
+                    {{-- @php
                         $fields = [
-                            'Full Name' => $roomBook->name,
-                            'Phone Number' => $roomBook->phone,
-                            'Check In Date' => $roomBook->checkin,
-                            'Check Out Date' => $roomBook->checkout,
-                            'Room Type' => $roomBook->roomtype,
-                            'Room Name' => $roomBook->roomno,
-                            'Number of Guests' => $roomBook->guestn,
+                            'Full Name' => $transaction->roomBook->name,
+                            'Room Name' => $transaction->roomBook->roomno,
+                          
                         ];
                     @endphp
 
@@ -36,30 +32,46 @@
                             </div>
                         </div>
                         <hr class="my-2">
-                    @endforeach
-
+                    @endforeach --}}
                     <div class="row mb-3">
                         <div class="col-sm-4">
-                            <p class="mb-0 font-weight-bold" style="color: #003366;">Special Request:</p>
+                            <p class="mb-0 font-weight-bold" style="color: #003366;">Full Name:</p>
                         </div>
                         <div class="col-sm-8">
-                            <div class="alert alert-info" role="alert">
-                                {{ $roomBook->message ? $roomBook->message : 'No special requests.' }}
-                            </div>
+                            <p class="text-muted mb-0">{{ $transaction->roomBook->name}}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0 font-weight-bold" style="color: #003366;">Room:</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ $transaction->roomBook->roomno}}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0 font-weight-bold" style="color: #003366;">Room Type:</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ $transaction->roomBook->roomtype}}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0 font-weight-bold" style="color: #003366;">Payment ID:</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ $transaction->pidx ?? '-'}}</p>
                         </div>
                     </div>
                     
-                    
-                    {{-- Payment Details Section --}}
-                    <h5 class="text-center mt-4" style="color: #003366;">Payment Details</h5>
-                    <hr>
-
                     <div class="row mb-3">
                         <div class="col-sm-4">
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Payment Method:</p>
                         </div>
                         <div class="col-sm-8">
-                            <p class="text-muted mb-0">{{ $roomBook->transaction->payment_method ?? '-' }}</p>
+                            <p class="text-muted mb-0">{{ $transaction->payment_method ?? '-' }}</p>
                         </div>
                     </div>
 
@@ -68,7 +80,7 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Amount:</p>
                         </div>
                         <div class="col-sm-8">
-                            <p class="text-muted mb-0">{{ number_format($roomBook->transaction->amount ?? 0, 2) }}</p>
+                            <p class="text-muted mb-0">{{ number_format($transaction->amount ?? 0, 2) }}</p>
                         </div>
                     </div>
 
@@ -77,14 +89,14 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Payment Status:</p>
                         </div>
                         <div class="col-sm-8">
-                            <span class="badge badge-{{ $roomBook->transaction->payment_status == 'pending' ? 'danger' : 'success' }} p-2">
-                                {{ $roomBook->transaction->payment_status ?? '-' }}
+                            <span class="badge badge-{{ $transaction->payment_status == 'pending' ? 'danger' : 'success' }} p-2">
+                                {{ $transaction->payment_status ?? '-' }}
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer text-end">
-                    <a href="{{ route('roombook.index') }}" class="btn btn-primary">
+                    <a href="{{ route('transactions.index') }}" class="btn btn-primary">
                         <i class="fa fa-arrow-left"></i> Back to List
                     </a>
                 </div>

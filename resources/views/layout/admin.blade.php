@@ -147,9 +147,8 @@
             <a href="{{ url('admin/roombook') }}" class="{{ request()->is('admin/roombook') ? 'active-link' : '' }}">
                 <i class="fa-solid fa-list"></i> <span>Booked Room</span>
             </a>
-            <a href="{{ url('admin/transaction') }}"
-                class="{{ request()->is('admin/transaction') ? 'active-link' : '' }}">
-                <i class="fas fa-money-bill-wave"></i> <span>Transaction</span>
+            <a href="{{ url('admin/transactions') }}" class="{{ request()->is('admin/transactions') ? 'active-link' : '' }}">
+                <i class="fas fa-dollar-sign"></i> <span>Transaction</span>
             </a>
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fa-solid fa-sign-out-alt"></i> <span>{{ __('Logout') }}</span>

@@ -25,8 +25,8 @@ class RoomBookController extends Controller
     {
         $book = RoomBook::findOrFail($id);
         $transaction = Transaction::where('roombook_id', $id)->first(); // Get the transaction for the booking
-    
-        return view('frontend.room.bookview', compact('book','transaction'));
+
+        return view('frontend.room.bookview', compact('book', 'transaction'));
     }
 
     // Store booking details
@@ -52,10 +52,10 @@ class RoomBookController extends Controller
             $room = Room::findOrFail($validatedData['room_id']);
 
             // Check room availability for the selected dates
-            $isAvailable = $this->checkRoomAvailability($room->id, $validatedData['checkin'], $validatedData['checkout']);
-            if (!$isAvailable) {
-                return redirect()->back()->with('error', 'The selected room is not available for the chosen dates.');
-            }
+           // $isAvailable = $this->checkRoomAvailability($room->id, $validatedData['checkin'], $validatedData['checkout']);
+           // if (!$isAvailable) {
+            //    return redirect()->back()->with('error', 'The selected room is not available for the chosen dates.');
+           // } 
 
             // Calculate the number of nights
             $checkinDate = Carbon::parse($validatedData['checkin']);
@@ -94,7 +94,7 @@ class RoomBookController extends Controller
             if ($validatedData['payment_type'] === 'cash') {
                 // For cash payments, set status as 'pending'
                 $transaction->payment_method = 'cash';
-               
+
                 $transaction->save();
 
                 DB::commit();
@@ -104,7 +104,7 @@ class RoomBookController extends Controller
             } elseif ($validatedData['payment_type'] === 'online') {
                 // For online payments, initiate Khalti payment
                 $transaction->payment_method = 'online';
-                 
+
                 $transaction->save();
 
                 DB::commit();
@@ -112,6 +112,7 @@ class RoomBookController extends Controller
                 // Proceed with Khalti payment process
                 $response = $this->payWithKhalti($roombook, $totalAmount);
                 $d_res = json_decode($response);
+              
 
                 if ($d_res && isset($d_res->payment_url)) {
                     return redirect($d_res->payment_url);
@@ -125,6 +126,7 @@ class RoomBookController extends Controller
             return redirect()->route('bookview', ['id' => $roombook->id])->with('success', 'Room Booking submitted successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::info($e);
             // Log the exception or handle it as needed
             return redirect()->back()->with('error', 'An error occurred while processing your booking. Please try again.');
         }
@@ -144,11 +146,11 @@ class RoomBookController extends Controller
         $overlappingBookings = RoomBook::where('room_id', $roomId)
             ->where(function ($query) use ($checkin, $checkout) {
                 $query->whereBetween('checkin', [$checkin, $checkout])
-                      ->orWhereBetween('checkout', [$checkin, $checkout])
-                      ->orWhere(function ($query) use ($checkin, $checkout) {
-                          $query->where('checkin', '<=', $checkin)
-                                ->where('checkout', '>=', $checkout);
-                      });
+                    ->orWhereBetween('checkout', [$checkin, $checkout])
+                    ->orWhere(function ($query) use ($checkin, $checkout) {
+                        $query->where('checkin', '<=', $checkin)
+                            ->where('checkout', '>=', $checkout);
+                    });
             })
             ->count();
 
@@ -162,6 +164,9 @@ class RoomBookController extends Controller
      * @param float $totalAmount
      * @return \Illuminate\Http\Client\Response
      */
+
+
+
     public function payWithKhalti($roombook, $totalAmount)
     {
         $amount_paisa = intval($totalAmount * 100); // Convert to paisa and ensure it's an integer
@@ -179,21 +184,24 @@ class RoomBookController extends Controller
             "total_price" => "$amount_paisa",
             "quantity" => '1',
         ];
-        $khalti_base_url = 'https://khalti.com/api/v2/';
+        $khalti_base_url = 'https://a.khalti.com/api/v2/';
         $init_url = 'epayment/initiate/';
 
         $response = Http::withHeaders([
             'Accept' => 'application/json',
-            'Authorization' => 'Key ' . env('KHALTI_SECRET_KEY') // Use environment variable
+            'Authorization' => 'Key bce58b9ec7d1478f916e78c13f4660ec'
         ])->post($khalti_base_url . $init_url, [
-            'return_url' => route('khalti.callback'), // Use route helper for dynamic URLs
-            'website_url' => config('app.url'),
+            'return_url' => "http://localhost:8000/khalti/callback", //route('khalti.callback'), // Use route helper for dynamic URLs
+            'website_url' => "http://localhost:8000",     // config('app.url'),
             'amount' => $amount_paisa,
             'purchase_order_id' => $orderId,
             'purchase_order_name' => $orderName,
             'customer_info' => $customer,
-            'product_details' =>  $product_detail, // Include if needed
+            // 'product_details' =>  $product_detail,
+            // 'merchant_username' => '',
+            // 'merchant_extra' => ''
         ]);
+       
 
         return ($response);
     }
@@ -209,27 +217,27 @@ class RoomBookController extends Controller
         // Retrieve booking and transaction using purchase_order_id from the request
         $roombook = RoomBook::findOrFail($request->purchase_order_id);
         $transaction = Transaction::where('roombook_id', $roombook->id)->firstOrFail();
-    
+
         // Verify the payment with Khalti using the token from the request
-        $verificationResponse = $this->verifyKhaltiPayment($request->token, $transaction->amount);
-    
-        if ($verificationResponse && isset($verificationResponse['state']) && $verificationResponse['state']['name'] === 'Completed') {
+        $verificationResponse = $this->verifyKhaltiPayment($request->pidx);
+
+        if ($verificationResponse && $verificationResponse['status'] == 'Completed' && $verificationResponse['total_amount'] == $transaction->amount) {
             // Update the transaction status
             $transaction->payment_status = 'success';
             $transaction->update();
-    
+
             return redirect()->route('bookview', ['id' => $roombook->id])
                 ->with('success', 'Payment and booking successful!');
         } else {
             // Handle failed payment
             $transaction->payment_status = 'failed';
             $transaction->update();
-    
+
             return redirect()->route('bookview', ['id' => $roombook->id])
                 ->with('error', 'Khalti payment failed. Please try again.');
         }
     }
-    
+
     /**
      * Verifies Khalti Payment
      *
@@ -237,24 +245,94 @@ class RoomBookController extends Controller
      * @param int $amount
      * @return array|null
      */
-    protected function verifyKhaltiPayment($token, $amount)
+    protected function verifyKhaltiPayment($pidx)
     {
-        $khalti_base_url = 'https://khalti.com/api/v2/payment/verify/';
+        $khalti_base_url = 'https://a.khalti.com/api/v2/payment/verify/';
         $secret_key = env('KHALTI_SECRET_KEY'); // Use environment variable
-    
+
         $response = Http::withHeaders([
-            'Authorization' => 'Key ' . $secret_key,
+            'Authorization' => 'key bce58b9ec7d1478f916e78c13f4660ec',
             'Content-Type' => 'application/json',
         ])->post($khalti_base_url, [
-            'token' => $token,
-            'amount' => $amount * 100, // Ensure amount is in paisa
+            'pidx' => $pidx,
         ]);
-    
+ 
         if ($response->successful()) {
-            return $response->json();
+            return  json_decode($response);
         }
-    
+
         return null;
     }
 }
+
+
+
+//     public function cancel($id)
+// {
+//     $booking = RoomBook::find($id);
     
+//     // Update room status to 'cancel'
+//     $booking->room->room_status = 'cancel';
+//     $booking->room->save();
+
+//     // Optional: Update the booking status to reflect cancellation
+//     // $booking->status = 'cancelled';
+//     // $booking->save();
+
+//     return redirect()->route('user.index')->with('success', 'Reservation has been cancelled.');
+// }
+
+
+    
+
+
+// public function payWithKhalti($roombook)
+// {
+//     $amount = $roombook->room->price;
+//     $amount_paisa = $amount * 100;
+//     $orderId = "{$roombook->id}";
+//     $orderName = $roombook->room->name;
+//     $customer = [
+//         'name' => $roombook->name,
+//         'email' => '',
+//         'phone' => "{$roombook->phone}"
+//     ];
+//     $product_detail = [
+//         "identity" => $roombook->room->id,
+//         "name" => $orderName,
+//         "total_price" => "$amount_paisa",
+//         "quantity" => '1',
+//     ];
+//     $khalti_base_url = 'https://a.khalti.com/api/v2/';
+//     $init_url = 'epayment/initiate/';
+
+//     $response = Http::withHeaders([
+//         'Accept' => 'application/json',
+//         'Authorization' => 'key bce58b9ec7d1478f916e78c13f4660ec'
+//     ])->post($khalti_base_url . $init_url, [
+//         'return_url' => "http://localhost:8000/khalti/callback",
+//         'website_url' => "http://localhost:8000",
+//         'amount' => "$amount_paisa",
+//         'purchase_order_id' => $orderId,
+//         'purchase_order_name' => $orderName,
+//         'customer_info' => $customer,
+//         // 'product_details' =>  $product_detail,
+//         // 'merchant_username' => '',
+//         // 'merchant_extra' => ''
+//     ]);
+//     return ($response);
+// }
+
+// public function khaltiCallback(Request $request)
+// {
+//     // dd($request->all());
+//     $roombook =RoomBook::findOrfail($request->purchase_order_id);
+//     $roombook->status = 'success';
+//     $roombook->update();
+   
+    
+//     // Return response
+//     return redirect()->route('bookview', ['id' => $roombook->id])->with('success', 'Payment and Booking successful!');
+
+
+// }

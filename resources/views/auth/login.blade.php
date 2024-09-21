@@ -63,8 +63,9 @@
                     <button type="submit" class="btn btn-primary">Login</button>
 
                     <div class="register-link">
-                        <p>Don't have an account?<a href="{{ url('register') }}">&nbsp;Register</a></p>
+                        <p>Don't have an account?<a href="{{ url('register') }}" style="text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">&nbsp;Register</a></p>
                     </div>
+                    
                 </form>
             </div>
         </div>

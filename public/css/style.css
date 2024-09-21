@@ -1038,6 +1038,7 @@ line-height: 35px;
  
  .wrapper .register-link p a:hover {
      text-decoration: underline;
+     color: white;
  }
   /* Responsive styles */
  @media (max-width:900px) {

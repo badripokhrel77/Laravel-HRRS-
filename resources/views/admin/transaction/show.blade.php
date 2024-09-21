@@ -89,9 +89,18 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Payment Status:</p>
                         </div>
                         <div class="col-sm-8">
-                            <span class="badge badge-{{ $transaction->payment_status == 'pending' ? 'danger' : 'success' }} p-2">
-                                {{ $transaction->payment_status ?? '-' }}
-                            </span>
+                        
+                            @if ($transaction->payment_status == 'success' || $transaction->payment_status == 'cash')
+                            <label class="badge badge-success" style="color: white;">
+                                {{ $transaction->payment_status }}
+                            </label>
+                        @elseif($transaction->payment_status == 'pending')
+                            <label class="badge badge-danger" style="color: white;">
+                                {{ $transaction->payment_status }}
+                            </label>
+                        @else
+                            {{ $transaction->payment_status }}
+                        @endif
                         </div>
                     </div>
                 </div>

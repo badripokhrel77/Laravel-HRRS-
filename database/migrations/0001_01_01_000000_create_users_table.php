@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('role',['customer','admin'])->default('customer');
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            // $table->rememberToken();
+            $table->rememberToken();
             $table->timestamps();
         });
     

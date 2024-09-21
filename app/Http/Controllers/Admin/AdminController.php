@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function index()
     {
         // Calculate the total revenue
-        $totalRevenue = Transaction::whereIn('payment_status', ['online', 'cash'])->sum('amount');
+         $totalRevenue = Transaction::whereIn('payment_status', ['online', 'cash', 'success', 'completed'])->sum('amount');
     
         // Calculate the number of users
         $totalUsers = User::count();

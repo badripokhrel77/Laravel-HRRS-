@@ -59,7 +59,11 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Payment Method:</p>
                         </div>
                         <div class="col-sm-8">
-                            <p class="text-muted mb-0">{{ $roomBook->transaction->payment_method ?? '-' }}</p>
+                            @if ($roomBook->room_status == 'cancel')
+                                    {{ $roomBook->transaction->payment_method = 'N/A' }}
+                                @else
+                                    {{ $roomBook->transaction->payment_method }}
+                                @endif
                         </div>
                     </div>
 
@@ -68,7 +72,11 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Amount:</p>
                         </div>
                         <div class="col-sm-8">
-                            <p class="text-muted mb-0">{{ number_format($roomBook->transaction->amount ?? 0, 2) }}</p>
+                            @if ($roomBook->room_status == 'cancel')
+                            {{ $roomBook->transaction->amount = 'N/A' }}
+                        @else
+                            {{ $roomBook->transaction->amount }}
+                        @endif
                         </div>
                     </div>
 
@@ -77,9 +85,17 @@
                             <p class="mb-0 font-weight-bold" style="color: #003366;">Payment Status:</p>
                         </div>
                         <div class="col-sm-8">
-                            <span class="badge badge-{{ $roomBook->transaction->payment_status == 'pending' ? 'danger' : 'success' }} p-2">
-                                {{ $roomBook->transaction->payment_status ?? '-' }}
-                            </span>
+                            @if ($roomBook->transaction->payment_status == 'success' || $roomBook->transaction->payment_status == 'cash')
+                                    <label class="badge badge-success" style="color: white;">
+                                        {{ $roomBook->transaction->payment_status }}
+                                    </label>
+                                @elseif($roomBook->transaction->payment_status == 'pending')
+                                    <label class="badge badge-danger" style="color: white;">
+                                        {{ $roomBook->transaction->payment_status }}
+                                    </label>
+                                @else
+                                    {{ $roomBook->transaction->payment_status }}
+                                @endif
                         </div>
                     </div>
                 </div>

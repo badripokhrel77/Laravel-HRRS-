@@ -69,13 +69,15 @@ Route::prefix('user')->middleware(['is_auth'])->group(function(){
     // Custom route for viewing a single reservation
     Route::get('/reservedroom/{id}/view', [App\Http\Controllers\User\ReservedRoomController::class, 'bookview'])->name('reservedroom.bookview');
 
-
-
     Route::post('/profile/change-password', [App\Http\Controllers\User\ProfileController::class, 'changePassword'])->name('password.change');
 
     // Route for updating profile image
-    route::put('/profile-update-image', [App\Http\Controllers\User\ProfileController::class, 'updateImage'])->name('profile.updateImage');
+    Route::put('/profile-update-image', [App\Http\Controllers\User\ProfileController::class, 'updateImage'])->name('profile.updateImage');
+
+    // Route for canceling a booking
+    Route::delete('/reservedroom/{id}/cancel', [App\Http\Controllers\User\ReservedRoomController::class, 'cancel'])->name('reservedroom.cancel');
 });
+
 
 
 

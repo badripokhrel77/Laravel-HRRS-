@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('transactions', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('roombook_id');
-        $table->string('pidx');
+        $table->string('pidx')->nullable();
         $table->string('payment_method');
         $table->string('payment_status')->default('pending');
         $table->decimal('amount', 8, 2); // Adjust as needed

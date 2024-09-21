@@ -9,85 +9,61 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>S.N</th>
-                        <th>Room Type</th>
-                        <th>Payment ID</th>
-                        <th>Payment Method</th>
-                        <th>Amount</th>
-                        <th>Payment Status</th>
-                        <th>view</th>
+                        <th style="text-align: center; vertical-align: middle;">S.N</th>
+                        <th style="text-align: center; vertical-align: middle;">Room Type</th>
+                        <th style="text-align: center; vertical-align: middle;">Payment ID</th>
+                        <th style="text-align: center; vertical-align: middle;">Payment Method</th>
+                        <th style="text-align: center; vertical-align: middle;">Amount</th>
+                        <th style="text-align: center; vertical-align: middle;">Payment Status</th>
+                        <th style="text-align: center; vertical-align: middle;">Room Status</th>
+                        <th style="text-align: center; vertical-align: middle;">View</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($transactions as $key => $transaction)
                         <tr>
-                            <td>{{ ++$key }}</td>
-                            <td>{{ $transaction->roombook->roomtype }}</td>
-                            <td>{{ $transaction->pidx }}</td>
-                            <td>{{ $transaction->payment_method }}</td>
-                            <td>{{ number_format($transaction->amount, 2) }}</td>
-                            <td>
-                                <label
-                                    class="badge @if ($transaction->payment_status == 'success' || $transaction->payment_status == 'cash') badge-success 
-                            @else badge-danger @endif"
-                                    style="color: white;">
+                            <td style="text-align: center; vertical-align: middle;">{{ ++$key }}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{ $transaction->roombook->roomtype }}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{ $transaction->pidx }}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{ $transaction->payment_method }}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{ number_format($transaction->amount, 2) }}</td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                @if ($transaction->payment_status == 'success' || $transaction->payment_status == 'cash')
+                                    <label class="badge badge-success" style="color: white;">
+                                        {{ $transaction->payment_status }}
+                                    </label>
+                                @elseif($transaction->payment_status == 'pending')
+                                    <label class="badge badge-danger" style="color: white;">
+                                        {{ $transaction->payment_status }}
+                                    </label>
+                                @else
                                     {{ $transaction->payment_status }}
-                                </label>
+                                @endif
                             </td>
-                            <td>
-                                <div style="display: inline-block;">
-                                    <a href="{{ route('transactions.show', $transaction->id) }}" class="btn btn-info btn-sm" title="show">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                </div>
+                            <td style="text-align: center; vertical-align: middle;">
+                                @if ($transaction->roombook->room_status == 'booked')
+                                    <label class="badge bg-info" style="color: white;">Booked</label>
+                                @elseif($transaction->roombook->room_status == 'cancel')
+                                    <label class="badge bg-danger" style="color: white;">Canceled</label>
+                                @else
+                                    <label class="badge bg-success" style="color: white;">
+                                        {{ $transaction->roombook->room_status }}
+                                    </label>
+                                @endif
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                <a href="{{ route('transactions.show', $transaction->id) }}" class="btn btn-info btn-sm" title="show">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                             </td>
                         </tr>
-                        @empty
-                            <tr>
-                                <td colspan="11" style="text-align: center">No Data Found</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="11" style="text-align: center; vertical-align: middle;">No Data Found</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-
-        @push('styles')
-            <style>
-                .badge {
-                    display: inline-block;
-                    padding: 0.5em 1em;
-                    font-size: 0.875em;
-                    font-weight: 700;
-                    text-align: center;
-                    white-space: nowrap;
-                    border-radius: 0.25rem;
-                }
-
-                .badge.bg-danger {
-                    background-color: #dc3545;
-                    color: #fff;
-                }
-
-                .badge.bg-success {
-                    background-color: #28a745;
-                    color: #fff;
-                }
-
-                /* Table styling */
-                table {
-                    width: 100%;
-                    margin-top: 20px;
-                }
-
-                th,
-                td {
-                    text-align: center;
-                    /* Center horizontally */
-                    vertical-align: middle;
-                    /* Center vertically */
-                }
-            </style>
-        @endpush
-
-    @endsection
+    </div>
+@endsection

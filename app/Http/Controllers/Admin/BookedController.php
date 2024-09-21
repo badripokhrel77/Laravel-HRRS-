@@ -26,7 +26,7 @@ class BookedController extends Controller
         }
         // Paginate the results and pass to the view
         $roombook = $query->with('transaction')->orderBy('id', 'desc')->paginate(7);
-        
+
         return view('admin.roombook.index', [
             'roombook' => $roombook,
         ]);
@@ -73,21 +73,30 @@ class BookedController extends Controller
             'roomBook' => $roomBook
         ]);
     }
-
     public function update(Request $request, $id)
     {
         // Validate the form inputs
         $validatedData = $request->validate([
-           
             'checkin' => 'required|date',
             'checkout' => 'required|date|after_or_equal:checkin',
             'guestn' => 'required|integer|min:1|max:10',
-            'room_status' => 'required|string|in:booked,check-in,check-out',
+            'room_status' => 'required|string|in:booked,check-in,check-out,cancel',
         ]);
 
         try {
             // Fetch the specific RoomBook record by ID
             $roomBook = RoomBook::findOrFail($id);
+
+            // Calculate the number of nights based on updated check-in and check-out dates
+            $checkinDate = Carbon::parse($validatedData['checkin']);
+            $checkoutDate = Carbon::parse($validatedData['checkout']);
+            $nights = $checkinDate->diffInDays($checkoutDate);
+
+            // Fetch the associated room
+            $room = Room::findOrFail($roomBook->room_id);
+
+            // Calculate the new total amount
+            $totalAmount = $room->price * $nights;
 
             // Update the RoomBook details
             $roomBook->update([
@@ -99,14 +108,23 @@ class BookedController extends Controller
                 'room_status' => $request->room_status,
             ]);
 
+            // Fetch the associated transaction
             $transaction = Transaction::where('roombook_id', $id)->first();
-            $transaction->payment_status = $request->status;
+
+            // Update the transaction details based on the new room status
+            if ($roomBook->room_status == 'cancel') {
+                $transaction->payment_status = '-';
+                $transaction->amount = 0;
+            } else {
+                $transaction->payment_status = $request->status; // Update payment status as needed
+                $transaction->amount = $totalAmount; // Update with the new total amount
+            }
+
+            // Save the updated transaction
             $transaction->update();
 
-            $room = Room::find($roomBook->room_id);
-
             // Update the Room's status based on the RoomBook's status
-            if ($request->room_status === 'check-out') {
+            if ($request->room_status === 'check-out' || $request->room_status === 'cancel') {
                 $room->room_status = 'available';
             } else {
                 $room->room_status = 'booked';
@@ -115,13 +133,14 @@ class BookedController extends Controller
             // Save the Room's updated status
             $room->save();
 
-            return redirect(route('roombook.index'))->with('success', 'RoomBook details updated successfully!');
+            return redirect(route('roombook.index'))->with('success', 'RoomBook details and transaction updated successfully!');
         } catch (\Exception $e) {
             // Log the error and redirect back with an error message
             \Log::error('RoomBook update failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to update RoomBook details. Please try again.');
         }
     }
+
 
     public function show($id)
     {

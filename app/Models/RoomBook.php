@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RoomBook extends Model
 {
     use HasFactory;
+
     // Define the table associated with the model
     protected $table = 'roombook';
 
@@ -24,26 +25,29 @@ class RoomBook extends Model
         'room_status'
     ];
 
-    // If you have any date fields, specify them here
+    // Specify date fields if applicable
     protected $dates = [
         'checkin',
         'checkout',
     ];
 
-    // Example of a relationship (if applicable)
+    // Relationships
+
+    // RoomBook belongs to a User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // RoomBook belongs to a Room
     public function room()
     {
-        return $this->hasOne(Room::class, 'id', 'room_id');
+        return $this->belongsTo(Room::class, 'room_id', 'id');
     }
 
+    // RoomBook has one Transaction
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'id','roombook_id');
+        return $this->hasOne(Transaction::class, 'roombook_id', 'id');
     }
-    
 }

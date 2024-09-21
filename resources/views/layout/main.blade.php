@@ -24,7 +24,7 @@
 <body class="main-layout">
     <!-- loader  -->
     <div class="loader_bg">
-        <div class="loader"><img src="images/loading.gif" alt="Loading...." /></div>
+        <div class="loader"><img src={{ asset("images/loading.gif" )}} alt="Loading...." /></div>
     </div>
     <!-- end loader -->
     <!-- header -->

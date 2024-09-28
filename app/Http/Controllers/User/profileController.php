@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class profileController extends Controller
+class ProfileController extends Controller
 {
     public function index()
     {

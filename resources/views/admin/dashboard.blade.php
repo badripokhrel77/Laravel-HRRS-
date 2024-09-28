@@ -24,11 +24,11 @@
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
             <div class="card text-white bg-success h-100 shadow-lg">
                 <div class="card-header text-center font-weight-bold" style="font-size: 1.25rem;">
-                    Booked Rooms
+                    Currently Booked Rooms
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title display-4" style="font-size: 2.5rem;">{{ $bookedRooms->count() }}</h5>
-                    <p class="card-text">Rooms booked in the last 7 days</p>
+                    <h5 class="card-title display-4" style="font-size: 2.5rem;">{{ $currentBookedRooms->count() }}</h5>
+                    <p class="card-text">Total currently booked rooms</p>
                 </div>
             </div>
         </div>
@@ -85,14 +85,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($bookedRooms as $key => $RoomBook)
+                            @forelse ($last7DaysBookedRooms as $key => $RoomBook)
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $RoomBook->name }}</td>
                                     <td>{{ $RoomBook->checkin }}</td>
                                     <td>{{ $RoomBook->checkout }}</td>
                                     <td>{{ $RoomBook->roomtype }}</td>
-                                    <td>{{ $RoomBook->transaction->payment_method ?? '-'}}</td>
+                                    <td>{{ $RoomBook->transaction->payment_method ?? '-' }}</td>
                                     <td>{{ $RoomBook->transaction->amount }}</td>
                                 </tr>
                             @empty
@@ -105,7 +105,53 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
+    <hr>
+    <!-- Canceled Rooms Table -->
+<div class="row mt-4">
+    <div class="col-lg-12">
+        <div class="card shadow-lg">
+            <div class="card-header font-weight-bold">
+                Canceled Rooms in the Last Month
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">S.N</th>
+                            <th scope="col">Guest Name</th>
+                            <th scope="col">Check-in Date</th>
+                            <th scope="col">Check-out Date</th>
+                            <th scope="col">Room Type</th>
+                            <th scope="col">Cancellation Date</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($canceledRooms as $key => $RoomBook)
+                            <tr>
+                                <td>{{ ++$key }}</td>
+                                <td>{{ $RoomBook->name }}</td>
+                                <td>{{ $RoomBook->checkin }}</td>
+                                <td>{{ $RoomBook->checkout }}</td>
+                                <td>{{ $RoomBook->roomtype }}</td>
+                                <td>{{ $RoomBook->updated_at }}</td> <!-- Assuming this is the cancellation date -->
+                                <td>{{ $RoomBook->transaction->payment_method ?? '-' }}</td>
+                                <td>{{ $RoomBook->transaction->amount }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">No canceled bookings available in the last month.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <!-- Inline CSS for styling -->

@@ -25,7 +25,7 @@ class RoomController extends Controller
     }
 
     // Retrieve rooms with pagination
-    $rooms = $query->orderBy('id', 'desc')->paginate(10);
+    $rooms = $query->orderBy('id', 'desc')->paginate(5);
 
     return view('admin/room/index', [
         'rooms' => $rooms,
